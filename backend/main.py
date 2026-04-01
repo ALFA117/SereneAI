@@ -121,7 +121,31 @@ async def startup_event():
             embeddings_cache = json.load(f)
         print(f"Loaded {len(embeddings_cache)} cached embeddings.")
     else:
-        print("No embeddings cache found. Run POST /generate-embeddings first.")
+        print("No embeddings cache found. Auto-generating in background...")
+        asyncio.create_task(auto_generate_embeddings())
+
+
+async def auto_generate_embeddings():
+    global embeddings_cache
+    cache = {}
+    for tech in knowledge_base:
+        if tech["id"] in cache:
+            continue
+        text = f"{tech['nombre']}. {tech['descripcion']}"
+        for attempt in range(3):
+            try:
+                vec = await get_embedding(text)
+                cache[tech["id"]] = vec
+                await asyncio.sleep(1.5)
+                break
+            except Exception:
+                if attempt < 2:
+                    await asyncio.sleep(5)
+    embeddings_cache = cache
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with open(EMB_PATH, "w", encoding="utf-8") as f:
+        json.dump(cache, f)
+    print(f"Auto-generated {len(cache)} embeddings.")
 
 
 # ── Routes ───────────────────────────────────────────────────────────────────
