@@ -2,27 +2,31 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SereneAI — Habla. Te escucho. Respiremos juntos.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>SereneAI — Tu espacio de calma</title>
   <style>
-    /* ── Reset & Variables ─────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0f1117;
-      --surface: #1a1d27;
-      --surface2: #252836;
-      --accent: #7c6fff;
-      --accent2: #a78bfa;
-      --user-bubble: #2d2f45;
-      --ai-bubble: #1e2235;
-      --text: #e8e8f0;
-      --text-muted: #8b8fa8;
-      --danger: #f87171;
-      --success: #4ade80;
-      --radius: 18px;
-      --radius-sm: 10px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --bg:         #0d0f18;
+      --surface:    #13151f;
+      --surface2:   #1c1f2e;
+      --surface3:   #242840;
+      --accent:     #7b6ef6;
+      --accent2:    #a78bfa;
+      --accent3:    #c4b5fd;
+      --user-bg:    #2a2d44;
+      --ai-bg:      #181b2b;
+      --text:       #eaeaf5;
+      --text-muted: #7b7f9e;
+      --text-dim:   #4a4d6a;
+      --danger:     #f87171;
+      --success:    #34d399;
+      --warning:    #fbbf24;
+      --r:          20px;
+      --r-sm:       12px;
+      --shadow:     0 8px 32px rgba(0,0,0,0.5);
+      --shadow-sm:  0 2px 12px rgba(0,0,0,0.3);
     }
 
     body {
@@ -31,344 +35,639 @@
       color: var(--text);
       height: 100dvh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
-    /* ── Layout ────────────────────────────────────────────────────── */
+    /* ── App shell ── */
     .app {
       width: 100%;
-      max-width: 680px;
+      max-width: 700px;
       height: 100dvh;
       display: flex;
       flex-direction: column;
       background: var(--surface);
-      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
     }
 
-    /* ── Header ────────────────────────────────────────────────────── */
+    /* ── Header ── */
     header {
-      padding: 18px 24px;
+      padding: 14px 20px;
       background: var(--surface2);
       display: flex;
       align-items: center;
       gap: 12px;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+      z-index: 10;
     }
 
     .logo {
-      width: 38px; height: 38px;
-      background: linear-gradient(135deg, var(--accent), #c084fc);
-      border-radius: 50%;
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, #7b6ef6, #c084fc);
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(123,110,246,0.4);
+      flex-shrink: 0;
     }
 
-    .header-text h1 { font-size: 1.1rem; font-weight: 700; }
-    .header-text p { font-size: 0.72rem; color: var(--text-muted); }
+    .header-info { flex: 1; min-width: 0; }
+    .header-info h1 {
+      font-size: 1rem; font-weight: 700;
+      background: linear-gradient(90deg, #a78bfa, #e879f9);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-info p { font-size: 0.7rem; color: var(--text-muted); margin-top: 1px; }
 
-    .status-dot {
-      width: 8px; height: 8px;
-      background: var(--success);
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+
+    .status-pill {
+      display: flex; align-items: center; gap: 5px;
+      padding: 4px 10px;
+      background: rgba(52,211,153,0.1);
+      border: 1px solid rgba(52,211,153,0.2);
+      border-radius: 999px;
+      font-size: 0.68rem;
+      color: var(--success);
+      transition: all 0.3s;
+    }
+    .status-pill.offline { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.2); color: var(--danger); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    .icon-btn {
+      width: 36px; height: 36px;
+      background: var(--surface3);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      color: var(--text-muted);
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .icon-btn:hover { background: var(--surface3); color: var(--text); border-color: var(--accent); }
+
+    /* ── Settings panel ── */
+    .settings-panel {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      background: var(--surface2);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 60px 20px 20px;
+      z-index: 9;
+      transform: translateY(-100%);
+      transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: var(--shadow);
+    }
+    .settings-panel.open { transform: translateY(0); }
+
+    .settings-panel h2 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .setting-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .setting-row:last-child { border-bottom: none; }
+
+    .setting-label { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; }
+    .setting-label span { font-size: 1.1rem; }
+    .setting-label small { display: block; font-size: 0.72rem; color: var(--text-muted); }
+
+    /* Toggle switch */
+    .toggle { position: relative; width: 44px; height: 24px; cursor: pointer; flex-shrink: 0; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0;
+      background: var(--surface3);
+      border-radius: 999px;
+      transition: background 0.2s;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .toggle input:checked + .toggle-track { background: var(--accent); border-color: var(--accent); }
+    .toggle-thumb {
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 16px; height: 16px;
+      background: white;
       border-radius: 50%;
-      margin-left: auto;
-      box-shadow: 0 0 6px var(--success);
+      transition: transform 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
+    .toggle input:checked ~ .toggle-thumb { transform: translateX(20px); }
 
-    /* ── Chat area ──────────────────────────────────────────────────── */
+    /* ── Chat area ── */
     .chat {
       flex: 1;
       overflow-y: auto;
-      padding: 24px 20px;
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
       scroll-behavior: smooth;
     }
 
-    .bubble {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      line-height: 1.55;
-      font-size: 0.93rem;
-      animation: fadeUp 0.25s ease;
+    .chat::-webkit-scrollbar { width: 3px; }
+    .chat::-webkit-scrollbar-track { background: transparent; }
+    .chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+
+    /* ── Bubbles ── */
+    .bubble-row {
+      display: flex;
+      gap: 10px;
+      animation: fadeUp 0.2s ease;
     }
+    .bubble-row.user { flex-direction: row-reverse; }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .bubble.user {
-      background: var(--user-bubble);
+    .avatar {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
       align-self: flex-end;
+    }
+
+    .avatar.ai { background: linear-gradient(135deg, #7b6ef6, #c084fc); }
+    .avatar.user { background: var(--surface3); }
+
+    .bubble {
+      max-width: calc(100% - 90px);
+      padding: 12px 16px;
+      border-radius: 18px;
+      line-height: 1.6;
+      font-size: 0.9rem;
+    }
+
+    .bubble.user {
+      background: var(--user-bg);
       border-bottom-right-radius: 4px;
+      color: var(--text);
     }
 
     .bubble.ai {
-      background: var(--ai-bubble);
-      align-self: flex-start;
+      background: var(--ai-bg);
       border-bottom-left-radius: 4px;
-      border: 1px solid rgba(124,111,255,0.15);
+      border: 1px solid rgba(123,110,246,0.12);
     }
 
-    .bubble audio {
-      margin-top: 8px;
-      width: 100%;
-      height: 32px;
-      accent-color: var(--accent);
+    /* Audio play button */
+    .audio-btn {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 10px;
+      padding: 7px 14px;
+      background: rgba(123,110,246,0.12);
+      border: 1px solid rgba(123,110,246,0.25);
+      border-radius: 999px;
+      color: var(--accent3);
+      font-size: 0.78rem;
+      cursor: pointer;
+      width: fit-content;
+      transition: all 0.2s;
     }
+    .audio-btn:hover { background: rgba(123,110,246,0.22); }
+    .audio-btn.playing { background: rgba(123,110,246,0.25); color: white; }
 
-    /* ── Crisis banner ──────────────────────────────────────────────── */
+    /* ── Crisis banner ── */
     .crisis-banner {
       display: none;
-      background: linear-gradient(135deg, #7f1d1d, #991b1b);
-      border: 1px solid var(--danger);
-      border-radius: var(--radius-sm);
-      padding: 16px 20px;
-      margin: 0 20px;
-      font-size: 0.88rem;
-      line-height: 1.6;
+      margin: 0 16px 10px;
+      background: linear-gradient(135deg, rgba(127,29,29,0.9), rgba(153,27,27,0.9));
+      border: 1px solid rgba(248,113,113,0.4);
+      border-radius: var(--r-sm);
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      line-height: 1.65;
+      animation: fadeUp 0.3s ease;
+      flex-shrink: 0;
     }
+    .crisis-banner.visible { display: block; }
+    .crisis-banner strong { color: var(--danger); }
 
-    .crisis-banner.visible { display: block; animation: fadeUp 0.3s ease; }
-    .crisis-banner strong { color: var(--danger); display: block; margin-bottom: 6px; }
-
-    /* ── Motivational card ──────────────────────────────────────────── */
+    /* ── Card section ── */
     .card-section {
       display: none;
-      padding: 20px;
+      padding: 16px;
       text-align: center;
       animation: fadeUp 0.4s ease;
+      flex-shrink: 0;
     }
-
     .card-section.visible { display: block; }
-
     .card-section img {
-      width: 100%;
-      max-width: 320px;
-      border-radius: var(--radius);
+      width: 100%; max-width: 300px;
+      border-radius: var(--r);
       box-shadow: var(--shadow);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-
-    .card-section a {
-      display: inline-block;
-      padding: 8px 20px;
-      background: var(--accent);
-      color: white;
+    .card-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .card-btn {
+      padding: 7px 18px;
       border-radius: 999px;
-      text-decoration: none;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+    .card-btn.primary { background: var(--accent); color: white; }
+    .card-btn.primary:hover { background: var(--accent2); }
+    .card-btn.secondary { background: var(--surface3); color: var(--text-muted); }
+    .card-btn.secondary:hover { color: var(--text); }
+
+    /* ── Thinking dots ── */
+    .thinking {
+      display: flex; gap: 5px;
+      align-self: flex-start;
+      padding: 12px 16px;
+      background: var(--ai-bg);
+      border: 1px solid rgba(123,110,246,0.12);
+      border-radius: 18px;
+      border-bottom-left-radius: 4px;
+    }
+    .thinking span {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+      opacity: 0.5;
+    }
+    .thinking span:nth-child(2) { animation-delay: 0.15s; }
+    .thinking span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40%            { transform: translateY(-5px); opacity: 1; }
     }
 
-    /* ── Input area ─────────────────────────────────────────────────── */
+    /* ── Input area ── */
     .input-area {
-      padding: 16px 20px;
+      padding: 12px 16px 16px;
       background: var(--surface2);
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
     }
 
-    .transcript-box {
+    /* Mode tabs */
+    .input-tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 10px;
+      background: var(--surface3);
+      border-radius: 10px;
+      padding: 3px;
+    }
+    .tab-btn {
       flex: 1;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 10px 18px;
-      font-size: 0.88rem;
+      padding: 6px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
       color: var(--text-muted);
-      min-height: 42px;
-      display: flex;
-      align-items: center;
-      transition: border-color 0.2s;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
     }
+    .tab-btn.active { background: var(--surface2); color: var(--text); box-shadow: var(--shadow-sm); }
 
-    .transcript-box.active { border-color: var(--accent); color: var(--text); }
-
-    /* ── Mic button ─────────────────────────────────────────────────── */
+    /* Voice mode */
+    .voice-mode { display: flex; align-items: center; gap: 10px; }
     .mic-btn {
-      width: 52px; height: 52px;
+      width: 54px; height: 54px;
       border-radius: 50%;
       border: none;
       background: linear-gradient(135deg, var(--accent), #c084fc);
       color: white;
-      font-size: 1.3rem;
+      font-size: 1.4rem;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: transform 0.15s, box-shadow 0.15s;
-      box-shadow: 0 0 0 0 rgba(124,111,255,0.5);
+      box-shadow: 0 4px 16px rgba(123,110,246,0.4);
       flex-shrink: 0;
     }
-
     .mic-btn:hover { transform: scale(1.05); }
-
     .mic-btn.recording {
       background: linear-gradient(135deg, #ef4444, #dc2626);
+      box-shadow: 0 4px 16px rgba(239,68,68,0.5);
       animation: pulse 1.2s infinite;
     }
-
     @keyframes pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
-      70%  { box-shadow: 0 0 0 14px rgba(239,68,68,0); }
+      0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.5); }
+      70%  { box-shadow: 0 0 0 16px rgba(239,68,68,0); }
       100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
     }
 
-    /* End session button */
-    .end-btn {
-      padding: 8px 16px;
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 999px;
+    .mic-hint {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 0.84rem;
       color: var(--text-muted);
-      font-size: 0.78rem;
+      min-height: 44px;
+      display: flex; align-items: center;
+      transition: border-color 0.2s, color 0.2s;
+      line-height: 1.4;
+    }
+    .mic-hint.active { border-color: var(--accent); color: var(--text); }
+
+    /* Text mode */
+    .text-mode { display: flex; align-items: flex-end; gap: 10px; }
+    .text-input {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 0.88rem;
+      color: var(--text);
+      resize: none;
+      max-height: 120px;
+      min-height: 44px;
+      font-family: inherit;
+      line-height: 1.45;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .text-input:focus { border-color: var(--accent); }
+    .text-input::placeholder { color: var(--text-muted); }
+
+    .send-btn {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      border: none;
+      background: var(--accent);
+      color: white;
+      font-size: 1rem;
       cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
       flex-shrink: 0;
     }
+    .send-btn:hover { background: var(--accent2); transform: scale(1.05); }
+    .send-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* Bottom row */
+    .input-bottom {
+      display: flex; align-items: center; justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .end-btn {
+      padding: 6px 14px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      color: var(--text-dim);
+      font-size: 0.74rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
     .end-btn:hover { border-color: var(--accent2); color: var(--accent2); }
 
-    /* ── Loading dots ───────────────────────────────────────────────── */
-    .thinking {
-      display: flex; gap: 6px; padding: 12px 16px;
-      align-self: flex-start;
+    /* ── Overlay for settings close ── */
+    .overlay {
+      display: none;
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 8;
     }
-    .thinking span {
-      width: 8px; height: 8px;
-      background: var(--accent);
-      border-radius: 50%;
-      animation: bounce 1.2s infinite;
-    }
-    .thinking span:nth-child(2) { animation-delay: 0.2s; }
-    .thinking span:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-      40%            { transform: translateY(-6px); opacity: 1; }
-    }
-
-    /* ── Scrollbar ──────────────────────────────────────────────────── */
-    .chat::-webkit-scrollbar { width: 4px; }
-    .chat::-webkit-scrollbar-track { background: transparent; }
-    .chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+    .overlay.visible { display: block; }
   </style>
 </head>
 <body>
 <div class="app">
 
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <h2>⚙ Preferencias</h2>
+    <div class="setting-row">
+      <div class="setting-label">
+        <span>🔊</span>
+        <div>
+          <div>Reproducir audio</div>
+          <small>Escucha la respuesta de SereneAI</small>
+        </div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggleAudio" />
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+    </div>
+    <div class="setting-row">
+      <div class="setting-label">
+        <span>🖼</span>
+        <div>
+          <div>Tarjeta motivacional</div>
+          <small>Genera una imagen al finalizar la sesión</small>
+        </div>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="toggleCard" checked />
+        <div class="toggle-track"></div>
+        <div class="toggle-thumb"></div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay"></div>
+
   <!-- Header -->
   <header>
     <div class="logo">🌿</div>
-    <div class="header-text">
+    <div class="header-info">
       <h1>SereneAI</h1>
-      <p>Companion de salud mental · OxBuild 2026</p>
+      <p>Tu espacio de calma · OxBuild 2026</p>
     </div>
-    <div class="status-dot" id="statusDot"></div>
+    <div class="header-actions">
+      <div class="status-pill" id="statusPill">
+        <div class="status-dot"></div>
+        <span id="statusText">En línea</span>
+      </div>
+      <button class="icon-btn" id="settingsBtn" title="Ajustes">⚙</button>
+    </div>
   </header>
 
-  <!-- Chat messages -->
+  <!-- Chat -->
   <div class="chat" id="chat">
-    <div class="bubble ai">
-      Hola, soy SereneAI. Estoy aquí para escucharte. ¿Cómo te sientes hoy? Puedes hablar con el botón del micrófono o escribir directamente.
+    <div class="bubble-row ai">
+      <div class="avatar ai">🌿</div>
+      <div class="bubble ai">
+        Hola, soy SereneAI. Estoy aquí para escucharte sin juicio.
+        Puedes hablar con el micrófono o escribir lo que sientes. ¿Cómo estás hoy?
+      </div>
     </div>
   </div>
 
-  <!-- Crisis banner (hidden by default) -->
+  <!-- Crisis banner -->
   <div class="crisis-banner" id="crisisBanner">
-    <strong>⚠ Noto que estás pasando por algo muy difícil.</strong>
-    Por favor, contacta ahora a una línea de ayuda profesional:<br><br>
-    🆘 <strong>SAPTEL México:</strong> 55 5259-8121 (24 horas)<br>
-    🆘 <strong>Línea de la Vida:</strong> 800 911-2000 (gratuita, 24 horas)<br><br>
-    No estás solo/a. Hay personas capacitadas para ayudarte ahora mismo.
+    <strong>⚠ Noto que estás pasando por algo muy difícil.</strong><br>
+    Por favor contacta a una línea de ayuda ahora mismo:<br><br>
+    🆘 <strong>SAPTEL México:</strong> 55 5259-8121 (24h)<br>
+    🆘 <strong>Línea de la Vida:</strong> 800 911-2000 (gratuita, 24h)<br>
+    🆘 <strong>IMSS:</strong> 800 890-0024<br><br>
+    No estás solo/a. Hay personas capacitadas esperando ayudarte.
   </div>
 
-  <!-- Motivational card (shown at end of session) -->
+  <!-- Motivational card -->
   <div class="card-section" id="cardSection">
     <img id="cardImage" src="" alt="Tarjeta motivacional" />
-    <a id="cardDownload" href="#" download="sereneai-tarjeta.png">Descargar tarjeta</a>
+    <div class="card-actions">
+      <a id="cardDownload" href="#" download="sereneai-tarjeta.png">
+        <button class="card-btn primary">⬇ Descargar</button>
+      </a>
+      <button class="card-btn secondary" id="cardClose">Cerrar</button>
+    </div>
   </div>
 
   <!-- Input area -->
   <div class="input-area">
-    <div class="transcript-box" id="transcriptBox">Toca el micrófono para hablar…</div>
-    <button class="end-btn" id="endBtn" title="Terminar sesión">Finalizar</button>
-    <button class="mic-btn" id="micBtn" title="Mantén presionado para hablar">🎤</button>
+
+    <!-- Mode tabs -->
+    <div class="input-tabs">
+      <button class="tab-btn active" id="tabVoice">🎤 Voz</button>
+      <button class="tab-btn" id="tabText">⌨ Texto</button>
+    </div>
+
+    <!-- Voice mode -->
+    <div class="voice-mode" id="voiceMode">
+      <div class="mic-hint" id="micHint">Mantén presionado para hablar…</div>
+      <button class="mic-btn" id="micBtn" title="Mantén presionado para hablar">🎤</button>
+    </div>
+
+    <!-- Text mode (hidden by default) -->
+    <div class="text-mode" id="textMode" style="display:none">
+      <textarea class="text-input" id="textInput" placeholder="Escribe lo que sientes…" rows="1"></textarea>
+      <button class="send-btn" id="sendBtn">➤</button>
+    </div>
+
+    <!-- Bottom row -->
+    <div class="input-bottom">
+      <button class="end-btn" id="endBtn">✦ Finalizar sesión</button>
+    </div>
+
   </div>
 
 </div>
 
 <script>
-  // ── Config ─────────────────────────────────────────────────────────────
   const API_URL = "https://web-production-49c1e.up.railway.app";
 
-  // ── State ──────────────────────────────────────────────────────────────
+  // ── Settings state ─────────────────────────────────────────────────────
+  const settings = {
+    audio: false,
+    card: true,
+  };
+
+  // ── DOM refs ──────────────────────────────────────────────────────────
+  const chat         = document.getElementById("chat");
+  const micBtn       = document.getElementById("micBtn");
+  const micHint      = document.getElementById("micHint");
+  const crisisBanner = document.getElementById("crisisBanner");
+  const cardSection  = document.getElementById("cardSection");
+  const cardImage    = document.getElementById("cardImage");
+  const cardDownload = document.getElementById("cardDownload");
+  const cardClose    = document.getElementById("cardClose");
+  const endBtn       = document.getElementById("endBtn");
+  const statusPill   = document.getElementById("statusPill");
+  const statusText   = document.getElementById("statusText");
+  const settingsBtn  = document.getElementById("settingsBtn");
+  const settingsPanel= document.getElementById("settingsPanel");
+  const overlay      = document.getElementById("overlay");
+  const tabVoice     = document.getElementById("tabVoice");
+  const tabText      = document.getElementById("tabText");
+  const voiceMode    = document.getElementById("voiceMode");
+  const textMode     = document.getElementById("textMode");
+  const textInput    = document.getElementById("textInput");
+  const sendBtn      = document.getElementById("sendBtn");
+  const toggleAudio  = document.getElementById("toggleAudio");
+  const toggleCard   = document.getElementById("toggleCard");
+
   let mediaRecorder = null;
-  let audioChunks = [];
-  let isRecording = false;
+  let audioChunks   = [];
+  let isRecording   = false;
   let conversationHistory = [];
+  let isBusy = false;
 
-  // ── DOM refs ───────────────────────────────────────────────────────────
-  const chat          = document.getElementById("chat");
-  const micBtn        = document.getElementById("micBtn");
-  const transcriptBox = document.getElementById("transcriptBox");
-  const crisisBanner  = document.getElementById("crisisBanner");
-  const cardSection   = document.getElementById("cardSection");
-  const cardImage     = document.getElementById("cardImage");
-  const cardDownload  = document.getElementById("cardDownload");
-  const endBtn        = document.getElementById("endBtn");
-  const statusDot     = document.getElementById("statusDot");
+  // ── Settings toggles ──────────────────────────────────────────────────
+  toggleAudio.addEventListener("change", () => { settings.audio = toggleAudio.checked; });
+  toggleCard.addEventListener("change",  () => { settings.card  = toggleCard.checked; });
 
-  // ── Utilities ──────────────────────────────────────────────────────────
-  function addBubble(role, html, audioB64 = null) {
-    const div = document.createElement("div");
-    div.className = `bubble ${role}`;
-    div.innerHTML = html;
+  settingsBtn.addEventListener("click", () => {
+    settingsPanel.classList.toggle("open");
+    overlay.classList.toggle("visible");
+  });
+  overlay.addEventListener("click", () => {
+    settingsPanel.classList.remove("open");
+    overlay.classList.remove("visible");
+  });
 
-    if (audioB64) {
-      const audio = document.createElement("audio");
-      audio.controls = true;
-      audio.autoplay = true;
-      audio.src = `data:audio/${audioB64.format};base64,${audioB64.data}`;
-      div.appendChild(audio);
+  cardClose.addEventListener("click", () => { cardSection.classList.remove("visible"); });
+
+  // ── Mode tabs ──────────────────────────────────────────────────────────
+  tabVoice.addEventListener("click", () => {
+    tabVoice.classList.add("active");
+    tabText.classList.remove("active");
+    voiceMode.style.display = "flex";
+    textMode.style.display  = "none";
+  });
+  tabText.addEventListener("click", () => {
+    tabText.classList.add("active");
+    tabVoice.classList.remove("active");
+    textMode.style.display  = "flex";
+    voiceMode.style.display = "none";
+    textInput.focus();
+  });
+
+  // ── Text input auto-resize + Enter to send ────────────────────────────
+  textInput.addEventListener("input", () => {
+    textInput.style.height = "auto";
+    textInput.style.height = Math.min(textInput.scrollHeight, 120) + "px";
+  });
+
+  textInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleTextSend();
     }
+  });
 
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-    return div;
-  }
+  sendBtn.addEventListener("click", handleTextSend);
 
-  function showThinking() {
-    const div = document.createElement("div");
-    div.className = "thinking";
-    div.id = "thinking";
-    div.innerHTML = "<span></span><span></span><span></span>";
-    chat.appendChild(div);
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function hideThinking() {
-    document.getElementById("thinking")?.remove();
-  }
-
-  function setStatus(online) {
-    statusDot.style.background = online ? "var(--success)" : "var(--danger)";
-    statusDot.style.boxShadow  = `0 0 6px ${online ? "var(--success)" : "var(--danger)"}`;
+  function handleTextSend() {
+    const text = textInput.value.trim();
+    if (!text || isBusy) return;
+    textInput.value = "";
+    textInput.style.height = "auto";
+    processText(text);
   }
 
   // ── Mic recording ──────────────────────────────────────────────────────
-  micBtn.addEventListener("mousedown", startRecording);
+  micBtn.addEventListener("mousedown",  startRecording);
   micBtn.addEventListener("touchstart", (e) => { e.preventDefault(); startRecording(); });
-  micBtn.addEventListener("mouseup", stopRecording);
+  micBtn.addEventListener("mouseup",    stopRecording);
   micBtn.addEventListener("mouseleave", () => { if (isRecording) stopRecording(); });
-  micBtn.addEventListener("touchend", stopRecording);
+  micBtn.addEventListener("touchend",   stopRecording);
 
   async function startRecording() {
-    if (isRecording) return;
+    if (isRecording || isBusy) return;
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunks = [];
@@ -380,127 +679,135 @@
       isRecording = true;
       micBtn.classList.add("recording");
       micBtn.textContent = "⏹";
-      transcriptBox.textContent = "Escuchando…";
-      transcriptBox.classList.add("active");
-    } catch (err) {
-      transcriptBox.textContent = "Error: no se pudo acceder al micrófono.";
+      micHint.textContent = "Escuchando…";
+      micHint.classList.add("active");
+    } catch {
+      micHint.textContent = "No se pudo acceder al micrófono.";
     }
   }
 
   async function stopRecording() {
     if (!isRecording || !mediaRecorder) return;
     isRecording = false;
-
     await new Promise((resolve) => {
       mediaRecorder.onstop = resolve;
       mediaRecorder.stop();
-      mediaRecorder.stream.getTracks().forEach((t) => t.stop());
+      mediaRecorder.stream.getTracks().forEach(t => t.stop());
     });
-
     micBtn.classList.remove("recording");
     micBtn.textContent = "🎤";
-    transcriptBox.textContent = "Procesando…";
-
+    micHint.textContent = "Procesando…";
     const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || "audio/webm" });
     await processAudio(blob);
   }
 
-  // ── Pipeline ───────────────────────────────────────────────────────────
+  // ── Audio pipeline ────────────────────────────────────────────────────
   async function processAudio(blob) {
+    isBusy = true;
     try {
-      // 1. Transcribe
       const formData = new FormData();
       formData.append("audio", blob, "audio.webm");
-
-      const transcribeResp = await fetch(`${API_URL}/transcribe`, {
-        method: "POST",
-        body: formData,
-      });
-      if (!transcribeResp.ok) throw new Error("Transcription failed");
-
-      const { text } = await transcribeResp.json();
-
+      const resp = await fetch(`${API_URL}/transcribe`, { method: "POST", body: formData });
+      if (!resp.ok) throw new Error("transcribe failed");
+      const { text } = await resp.json();
       if (!text.trim()) {
-        transcriptBox.textContent = "No escuché nada. Intenta de nuevo.";
-        transcriptBox.classList.remove("active");
+        micHint.textContent = "No escuché nada. Intenta de nuevo.";
+        micHint.classList.remove("active");
+        isBusy = false;
         return;
       }
+      micHint.textContent = "Toca para hablar…";
+      micHint.classList.remove("active");
+      await processText(text);
+    } catch (err) {
+      console.error(err);
+      micHint.textContent = "Error de conexión.";
+      micHint.classList.remove("active");
+      setStatus(false);
+      isBusy = false;
+    }
+  }
 
-      transcriptBox.textContent = text;
-      addBubble("user", escapeHtml(text));
-      conversationHistory.push({ role: "user", content: text });
+  // ── Text pipeline (shared by voice + text) ────────────────────────────
+  async function processText(text) {
+    isBusy = true;
+    sendBtn.disabled = true;
 
-      // 2. Chat + RAG
-      showThinking();
+    addBubble("user", escapeHtml(text));
+    conversationHistory.push({ role: "user", content: text });
+
+    const thinkingEl = showThinking();
+
+    try {
+      // 1. Chat + RAG
       const chatResp = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: conversationHistory,
-          transcribed_text: text,
-        }),
+        body: JSON.stringify({ messages: conversationHistory, transcribed_text: text }),
       });
-      if (!chatResp.ok) throw new Error("Chat failed");
+      if (!chatResp.ok) throw new Error("chat failed");
       const { response, es_crisis: crisis } = await chatResp.json();
-      hideThinking();
+      thinkingEl.remove();
 
       conversationHistory.push({ role: "assistant", content: response });
+      if (crisis) crisisBanner.classList.add("visible");
 
-      if (crisis) {
-        crisisBanner.classList.add("visible");
+      // 2. TTS (solo si está activado)
+      let audioData = null;
+      if (settings.audio) {
+        try {
+          const ttsResp = await fetch(`${API_URL}/synthesize`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: response }),
+          });
+          if (ttsResp.ok) {
+            const d = await ttsResp.json();
+            audioData = { data: d.audio_base64, format: d.format || "mp3" };
+          }
+        } catch { /* TTS es opcional */ }
       }
 
-      // 3. TTS
-      const ttsResp = await fetch(`${API_URL}/synthesize`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: response }),
-      });
-      let audioB64 = null;
-      if (ttsResp.ok) {
-        const ttsData = await ttsResp.json();
-        audioB64 = { data: ttsData.audio_base64, format: ttsData.format || "mp3" };
-      }
-
-      addBubble("ai", escapeHtml(response), audioB64);
-      transcriptBox.textContent = "Toca el micrófono para hablar…";
-      transcriptBox.classList.remove("active");
+      addBubble("ai", escapeHtml(response), audioData);
       setStatus(true);
 
     } catch (err) {
-      hideThinking();
       console.error(err);
+      thinkingEl.remove();
       addBubble("ai", "Hubo un error de conexión. Verifica que el servidor esté activo.");
       setStatus(false);
-      transcriptBox.textContent = "Toca el micrófono para hablar…";
-      transcriptBox.classList.remove("active");
     }
+
+    isBusy = false;
+    sendBtn.disabled = false;
   }
 
   // ── End session ────────────────────────────────────────────────────────
   endBtn.addEventListener("click", async () => {
-    if (conversationHistory.length < 2) return;
+    if (conversationHistory.length < 2 || isBusy) return;
+    if (!settings.card) {
+      addBubble("ai", "Sesión finalizada. Gracias por confiar en SereneAI. Cuídate mucho. 🌿");
+      conversationHistory = [];
+      return;
+    }
 
     endBtn.disabled = true;
     endBtn.textContent = "Generando…";
+    isBusy = true;
 
     try {
-      // Ask LLM for a closing phrase
       const closingResp = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: [
-            ...conversationHistory,
+          messages: [...conversationHistory,
             { role: "user", content: "Dame una sola frase corta de cierre inspiradora para esta sesión (máximo 12 palabras, sin comillas)." }
           ],
           transcribed_text: "cierre de sesión",
         }),
       });
-
       const { response: phrase } = await closingResp.json();
 
-      // Generate card
       const cardResp = await fetch(`${API_URL}/generate-card`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -515,14 +822,77 @@
         chat.scrollTop = chat.scrollHeight;
       }
     } catch (err) {
-      console.error("Card generation failed:", err);
+      console.error(err);
     }
 
+    isBusy = false;
     endBtn.disabled = false;
-    endBtn.textContent = "Finalizar";
+    endBtn.textContent = "✦ Finalizar sesión";
   });
 
-  // ── Helpers ────────────────────────────────────────────────────────────
+  // ── Bubble builder ────────────────────────────────────────────────────
+  function addBubble(role, html, audioData = null) {
+    const row = document.createElement("div");
+    row.className = `bubble-row ${role}`;
+
+    const avatar = document.createElement("div");
+    avatar.className = `avatar ${role}`;
+    avatar.textContent = role === "ai" ? "🌿" : "🧑";
+
+    const bubble = document.createElement("div");
+    bubble.className = `bubble ${role}`;
+    bubble.innerHTML = html;
+
+    if (audioData) {
+      const audio = new Audio(`data:audio/${audioData.format};base64,${audioData.data}`);
+      const btn = document.createElement("button");
+      btn.className = "audio-btn";
+      btn.innerHTML = "▶ Reproducir respuesta";
+      btn.addEventListener("click", () => {
+        if (audio.paused) {
+          audio.play();
+          btn.innerHTML = "⏸ Pausar";
+          btn.classList.add("playing");
+        } else {
+          audio.pause();
+          btn.innerHTML = "▶ Reproducir respuesta";
+          btn.classList.remove("playing");
+        }
+        audio.onended = () => {
+          btn.innerHTML = "▶ Reproducir respuesta";
+          btn.classList.remove("playing");
+        };
+      });
+      bubble.appendChild(btn);
+    }
+
+    if (role === "ai") {
+      row.appendChild(avatar);
+      row.appendChild(bubble);
+    } else {
+      row.appendChild(bubble);
+      row.appendChild(avatar);
+    }
+
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+    return row;
+  }
+
+  function showThinking() {
+    const div = document.createElement("div");
+    div.className = "thinking";
+    div.innerHTML = "<span></span><span></span><span></span>";
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+    return div;
+  }
+
+  function setStatus(online) {
+    statusPill.className = `status-pill${online ? "" : " offline"}`;
+    statusText.textContent = online ? "En línea" : "Sin conexión";
+  }
+
   function escapeHtml(text) {
     return text
       .replace(/&/g, "&amp;")
@@ -531,7 +901,7 @@
       .replace(/\n/g, "<br>");
   }
 
-  // ── Init: check API health ─────────────────────────────────────────────
+  // ── Init health check ─────────────────────────────────────────────────
   (async () => {
     try {
       const r = await fetch(`${API_URL}/health`);
