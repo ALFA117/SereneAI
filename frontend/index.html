@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SereneAI — Habla. Te escucho. Respiremos juntos.</title>
+  <style>
+    /* ── Reset & Variables ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #252836;
+      --accent: #7c6fff;
+      --accent2: #a78bfa;
+      --user-bubble: #2d2f45;
+      --ai-bubble: #1e2235;
+      --text: #e8e8f0;
+      --text-muted: #8b8fa8;
+      --danger: #f87171;
+      --success: #4ade80;
+      --radius: 18px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Layout ────────────────────────────────────────────────────── */
+    .app {
+      width: 100%;
+      max-width: 680px;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    /* ── Header ────────────────────────────────────────────────────── */
+    header {
+      padding: 18px 24px;
+      background: var(--surface2);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .logo {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--accent), #c084fc);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+
+    .header-text h1 { font-size: 1.1rem; font-weight: 700; }
+    .header-text p { font-size: 0.72rem; color: var(--text-muted); }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      margin-left: auto;
+      box-shadow: 0 0 6px var(--success);
+    }
+
+    /* ── Chat area ──────────────────────────────────────────────────── */
+    .chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      scroll-behavior: smooth;
+    }
+
+    .bubble {
+      max-width: 80%;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      line-height: 1.55;
+      font-size: 0.93rem;
+      animation: fadeUp 0.25s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .bubble.user {
+      background: var(--user-bubble);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .bubble.ai {
+      background: var(--ai-bubble);
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+      border: 1px solid rgba(124,111,255,0.15);
+    }
+
+    .bubble audio {
+      margin-top: 8px;
+      width: 100%;
+      height: 32px;
+      accent-color: var(--accent);
+    }
+
+    /* ── Crisis banner ──────────────────────────────────────────────── */
+    .crisis-banner {
+      display: none;
+      background: linear-gradient(135deg, #7f1d1d, #991b1b);
+      border: 1px solid var(--danger);
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin: 0 20px;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    .crisis-banner.visible { display: block; animation: fadeUp 0.3s ease; }
+    .crisis-banner strong { color: var(--danger); display: block; margin-bottom: 6px; }
+
+    /* ── Motivational card ──────────────────────────────────────────── */
+    .card-section {
+      display: none;
+      padding: 20px;
+      text-align: center;
+      animation: fadeUp 0.4s ease;
+    }
+
+    .card-section.visible { display: block; }
+
+    .card-section img {
+      width: 100%;
+      max-width: 320px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+
+    .card-section a {
+      display: inline-block;
+      padding: 8px 20px;
+      background: var(--accent);
+      color: white;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    /* ── Input area ─────────────────────────────────────────────────── */
+    .input-area {
+      padding: 16px 20px;
+      background: var(--surface2);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .transcript-box {
+      flex: 1;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      transition: border-color 0.2s;
+    }
+
+    .transcript-box.active { border-color: var(--accent); color: var(--text); }
+
+    /* ── Mic button ─────────────────────────────────────────────────── */
+    .mic-btn {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, var(--accent), #c084fc);
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 0 0 0 rgba(124,111,255,0.5);
+      flex-shrink: 0;
+    }
+
+    .mic-btn:hover { transform: scale(1.05); }
+
+    .mic-btn.recording {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(239,68,68,0.6); }
+      70%  { box-shadow: 0 0 0 14px rgba(239,68,68,0); }
+      100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
+    }
+
+    /* End session button */
+    .end-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 999px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .end-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+    /* ── Loading dots ───────────────────────────────────────────────── */
+    .thinking {
+      display: flex; gap: 6px; padding: 12px 16px;
+      align-self: flex-start;
+    }
+    .thinking span {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .thinking span:nth-child(2) { animation-delay: 0.2s; }
+    .thinking span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40%            { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ── Scrollbar ──────────────────────────────────────────────────── */
+    .chat::-webkit-scrollbar { width: 4px; }
+    .chat::-webkit-scrollbar-track { background: transparent; }
+    .chat::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header>
+    <div class="logo">🌿</div>
+    <div class="header-text">
+      <h1>SereneAI</h1>
+      <p>Companion de salud mental · OxBuild 2026</p>
+    </div>
+    <div class="status-dot" id="statusDot"></div>
+  </header>
+
+  <!-- Chat messages -->
+  <div class="chat" id="chat">
+    <div class="bubble ai">
+      Hola, soy SereneAI. Estoy aquí para escucharte. ¿Cómo te sientes hoy? Puedes hablar con el botón del micrófono o escribir directamente.
+    </div>
+  </div>
+
+  <!-- Crisis banner (hidden by default) -->
+  <div class="crisis-banner" id="crisisBanner">
+    <strong>⚠ Noto que estás pasando por algo muy difícil.</strong>
+    Por favor, contacta ahora a una línea de ayuda profesional:<br><br>
+    🆘 <strong>SAPTEL México:</strong> 55 5259-8121 (24 horas)<br>
+    🆘 <strong>Línea de la Vida:</strong> 800 911-2000 (gratuita, 24 horas)<br><br>
+    No estás solo/a. Hay personas capacitadas para ayudarte ahora mismo.
+  </div>
+
+  <!-- Motivational card (shown at end of session) -->
+  <div class="card-section" id="cardSection">
+    <img id="cardImage" src="" alt="Tarjeta motivacional" />
+    <a id="cardDownload" href="#" download="sereneai-tarjeta.png">Descargar tarjeta</a>
+  </div>
+
+  <!-- Input area -->
+  <div class="input-area">
+    <div class="transcript-box" id="transcriptBox">Toca el micrófono para hablar…</div>
+    <button class="end-btn" id="endBtn" title="Terminar sesión">Finalizar</button>
+    <button class="mic-btn" id="micBtn" title="Mantén presionado para hablar">🎤</button>
+  </div>
+
+</div>
+
+<script>
+  // ── Config ─────────────────────────────────────────────────────────────
+  const API_URL = "http://localhost:8000";
+
+  // ── State ──────────────────────────────────────────────────────────────
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let isRecording = false;
+  let conversationHistory = [];
+
+  // ── DOM refs ───────────────────────────────────────────────────────────
+  const chat          = document.getElementById("chat");
+  const micBtn        = document.getElementById("micBtn");
+  const transcriptBox = document.getElementById("transcriptBox");
+  const crisisBanner  = document.getElementById("crisisBanner");
+  const cardSection   = document.getElementById("cardSection");
+  const cardImage     = document.getElementById("cardImage");
+  const cardDownload  = document.getElementById("cardDownload");
+  const endBtn        = document.getElementById("endBtn");
+  const statusDot     = document.getElementById("statusDot");
+
+  // ── Utilities ──────────────────────────────────────────────────────────
+  function addBubble(role, html, audioB64 = null) {
+    const div = document.createElement("div");
+    div.className = `bubble ${role}`;
+    div.innerHTML = html;
+
+    if (audioB64) {
+      const audio = document.createElement("audio");
+      audio.controls = true;
+      audio.autoplay = true;
+      audio.src = `data:audio/${audioB64.format};base64,${audioB64.data}`;
+      div.appendChild(audio);
+    }
+
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+    return div;
+  }
+
+  function showThinking() {
+    const div = document.createElement("div");
+    div.className = "thinking";
+    div.id = "thinking";
+    div.innerHTML = "<span></span><span></span><span></span>";
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function hideThinking() {
+    document.getElementById("thinking")?.remove();
+  }
+
+  function setStatus(online) {
+    statusDot.style.background = online ? "var(--success)" : "var(--danger)";
+    statusDot.style.boxShadow  = `0 0 6px ${online ? "var(--success)" : "var(--danger)"}`;
+  }
+
+  // ── Mic recording ──────────────────────────────────────────────────────
+  micBtn.addEventListener("mousedown", startRecording);
+  micBtn.addEventListener("touchstart", (e) => { e.preventDefault(); startRecording(); });
+  micBtn.addEventListener("mouseup", stopRecording);
+  micBtn.addEventListener("mouseleave", () => { if (isRecording) stopRecording(); });
+  micBtn.addEventListener("touchend", stopRecording);
+
+  async function startRecording() {
+    if (isRecording) return;
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream, { mimeType: "audio/webm" });
+      mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+      mediaRecorder.start();
+      isRecording = true;
+      micBtn.classList.add("recording");
+      micBtn.textContent = "⏹";
+      transcriptBox.textContent = "Escuchando…";
+      transcriptBox.classList.add("active");
+    } catch (err) {
+      transcriptBox.textContent = "Error: no se pudo acceder al micrófono.";
+    }
+  }
+
+  async function stopRecording() {
+    if (!isRecording || !mediaRecorder) return;
+    isRecording = false;
+
+    await new Promise((resolve) => {
+      mediaRecorder.onstop = resolve;
+      mediaRecorder.stop();
+      mediaRecorder.stream.getTracks().forEach((t) => t.stop());
+    });
+
+    micBtn.classList.remove("recording");
+    micBtn.textContent = "🎤";
+    transcriptBox.textContent = "Procesando…";
+
+    const blob = new Blob(audioChunks, { type: "audio/webm" });
+    await processAudio(blob);
+  }
+
+  // ── Pipeline ───────────────────────────────────────────────────────────
+  async function processAudio(blob) {
+    try {
+      // 1. Transcribe
+      const formData = new FormData();
+      formData.append("audio", blob, "audio.webm");
+
+      const transcribeResp = await fetch(`${API_URL}/transcribe`, {
+        method: "POST",
+        body: formData,
+      });
+      if (!transcribeResp.ok) throw new Error("Transcription failed");
+
+      const { text } = await transcribeResp.json();
+
+      if (!text.trim()) {
+        transcriptBox.textContent = "No escuché nada. Intenta de nuevo.";
+        transcriptBox.classList.remove("active");
+        return;
+      }
+
+      transcriptBox.textContent = text;
+      addBubble("user", escapeHtml(text));
+      conversationHistory.push({ role: "user", content: text });
+
+      // 2. Chat + RAG
+      showThinking();
+      const chatResp = await fetch(`${API_URL}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: conversationHistory,
+          transcribed_text: text,
+        }),
+      });
+      if (!chatResp.ok) throw new Error("Chat failed");
+      const { response, es_crisis: crisis } = await chatResp.json();
+      hideThinking();
+
+      conversationHistory.push({ role: "assistant", content: response });
+
+      if (crisis) {
+        crisisBanner.classList.add("visible");
+      }
+
+      // 3. TTS
+      const ttsResp = await fetch(`${API_URL}/synthesize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: response }),
+      });
+      let audioB64 = null;
+      if (ttsResp.ok) {
+        const ttsData = await ttsResp.json();
+        audioB64 = { data: ttsData.audio_base64, format: ttsData.format || "mp3" };
+      }
+
+      addBubble("ai", escapeHtml(response), audioB64);
+      transcriptBox.textContent = "Toca el micrófono para hablar…";
+      transcriptBox.classList.remove("active");
+      setStatus(true);
+
+    } catch (err) {
+      hideThinking();
+      console.error(err);
+      addBubble("ai", "Hubo un error de conexión. Verifica que el servidor esté activo.");
+      setStatus(false);
+      transcriptBox.textContent = "Toca el micrófono para hablar…";
+      transcriptBox.classList.remove("active");
+    }
+  }
+
+  // ── End session ────────────────────────────────────────────────────────
+  endBtn.addEventListener("click", async () => {
+    if (conversationHistory.length < 2) return;
+
+    endBtn.disabled = true;
+    endBtn.textContent = "Generando…";
+
+    try {
+      // Ask LLM for a closing phrase
+      const closingResp = await fetch(`${API_URL}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [
+            ...conversationHistory,
+            { role: "user", content: "Dame una sola frase corta de cierre inspiradora para esta sesión (máximo 12 palabras, sin comillas)." }
+          ],
+          transcribed_text: "cierre de sesión",
+        }),
+      });
+
+      const { response: phrase } = await closingResp.json();
+
+      // Generate card
+      const cardResp = await fetch(`${API_URL}/generate-card`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phrase }),
+      });
+
+      if (cardResp.ok) {
+        const { image_url } = await cardResp.json();
+        cardImage.src = image_url;
+        cardDownload.href = image_url;
+        cardSection.classList.add("visible");
+        chat.scrollTop = chat.scrollHeight;
+      }
+    } catch (err) {
+      console.error("Card generation failed:", err);
+    }
+
+    endBtn.disabled = false;
+    endBtn.textContent = "Finalizar";
+  });
+
+  // ── Helpers ────────────────────────────────────────────────────────────
+  function escapeHtml(text) {
+    return text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/\n/g, "<br>");
+  }
+
+  // ── Init: check API health ─────────────────────────────────────────────
+  (async () => {
+    try {
+      const r = await fetch(`${API_URL}/health`);
+      setStatus(r.ok);
+    } catch {
+      setStatus(false);
+    }
+  })();
+</script>
+</body>
+</html>

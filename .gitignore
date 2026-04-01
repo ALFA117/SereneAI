@@ -1,0 +1,44 @@
+# Environment variables
+.env
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Node / Frontend
+node_modules/
+.next/
+dist/
+
+# Data generated at runtime
+data/embeddings.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Audio temp files
+*.webm
+*.mp3
+*.wav

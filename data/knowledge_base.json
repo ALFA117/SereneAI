@@ -1,0 +1,479 @@
+[
+  {
+    "id": "a1",
+    "nombre": "Respiración 4-7-8",
+    "categoria": "ansiedad",
+    "descripcion": "Técnica de respiración que activa el sistema nervioso parasimpático para reducir la ansiedad y el estrés de forma inmediata.",
+    "pasos": "1. Cierra los labios y exhala completamente por la boca.\n2. Inhala suavemente por la nariz contando 4 segundos.\n3. Retén el aire contando 7 segundos.\n4. Exhala lentamente por la boca contando 8 segundos.\n5. Repite el ciclo 4 veces.\n6. Practica al menos dos veces al día para mejores resultados.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "a2",
+    "nombre": "Respiración diafragmática",
+    "categoria": "ansiedad",
+    "descripcion": "Respiración profunda desde el abdomen que reduce la tensión muscular y calma el sistema nervioso.",
+    "pasos": "1. Siéntate o recuéstate en una posición cómoda.\n2. Coloca una mano sobre el pecho y la otra sobre el abdomen.\n3. Inhala lentamente por la nariz: el abdomen debe subir, el pecho debe quedarse quieto.\n4. Exhala lentamente por la boca apretando suavemente el abdomen.\n5. Repite 5-10 veces.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "a3",
+    "nombre": "Respiración en caja (Box Breathing)",
+    "categoria": "ansiedad",
+    "descripcion": "Técnica de respiración cuadrada usada por fuerzas especiales y atletas para recuperar el control emocional.",
+    "pasos": "1. Exhala todo el aire de los pulmones.\n2. Inhala por la nariz contando 4 segundos.\n3. Sostén el aire contando 4 segundos.\n4. Exhala por la boca contando 4 segundos.\n5. Sostén sin aire contando 4 segundos.\n6. Repite 4 ciclos completos.",
+    "duracion_minutos": 4,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "g1",
+    "nombre": "Grounding 5-4-3-2-1",
+    "categoria": "ansiedad",
+    "descripcion": "Técnica de anclaje sensorial que interrumpe el ciclo de pensamientos ansiosos trayendo la atención al momento presente.",
+    "pasos": "1. Identifica 5 cosas que puedes VER a tu alrededor.\n2. Identifica 4 cosas que puedes TOCAR. Toca una de ellas y nota su textura.\n3. Identifica 3 cosas que puedes ESCUCHAR en este momento.\n4. Identifica 2 cosas que puedes OLER (o que recuerdes que te gustan).\n5. Identifica 1 cosa que puedes SABOREAR.\n6. Respira profundo y observa cómo te sientes ahora.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "g2",
+    "nombre": "Anclaje físico al suelo",
+    "categoria": "ansiedad",
+    "descripcion": "Ejercicio somático que usa el contacto físico con el entorno para reducir la disociación y el pánico.",
+    "pasos": "1. Siéntate en una silla con los pies planos en el piso.\n2. Presiona los pies contra el suelo. Siente el peso de tu cuerpo.\n3. Coloca las manos sobre los muslos y apriétalas suavemente.\n4. Mira alrededor y nombra en voz alta 3 objetos cercanos.\n5. Repite para ti mismo: 'Estoy aquí. Estoy a salvo. Esto va a pasar.'",
+    "duracion_minutos": 3,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "g3",
+    "nombre": "Técnica de la temperatura",
+    "categoria": "ansiedad",
+    "descripcion": "Usar sensaciones de frío o calor para interrumpir una respuesta de pánico o disociación de manera inmediata.",
+    "pasos": "1. Corre agua fría sobre tus muñecas o el dorso de las manos.\n2. Alternatively: sostén un cubito de hielo en la mano durante 30 segundos.\n3. O: salpica agua fría en tu cara.\n4. Enfoca toda tu atención en la sensación física.\n5. Respira profundo y observa cómo tu sistema nervioso se regula.",
+    "duracion_minutos": 2,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "m1",
+    "nombre": "Escaneo corporal (Body Scan)",
+    "categoria": "estres",
+    "descripcion": "Práctica de mindfulness que recorre el cuerpo atención por atención para liberar tensión acumulada.",
+    "pasos": "1. Acuéstate boca arriba en un lugar tranquilo.\n2. Cierra los ojos y respira profundo 3 veces.\n3. Lleva tu atención a los dedos de los pies. ¿Qué sientes?\n4. Sube lentamente: pies, pantorrillas, rodillas, muslos, abdomen, pecho, hombros, brazos, manos, cuello, cara.\n5. En cada zona, si notas tensión, inhala y al exhalar imagina que esa tensión se disuelve.\n6. Al terminar, permanece en silencio 2 minutos.",
+    "duracion_minutos": 15,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "m2",
+    "nombre": "Mindfulness de 1 minuto",
+    "categoria": "estres",
+    "descripcion": "Práctica breve de atención plena para resetear la mente en momentos de sobrecarga.",
+    "pasos": "1. Pon un timer de 1 minuto.\n2. Siéntate derecho, con los ojos cerrados o la mirada suave hacia abajo.\n3. Lleva toda tu atención a tu respiración.\n4. Observa el aire entrando y saliendo sin intentar controlarlo.\n5. Cuando tu mente se distraiga, vuelve suavemente a la respiración.\n6. Al finalizar el minuto, abre los ojos lentamente.",
+    "duracion_minutos": 1,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "m3",
+    "nombre": "Observación de pensamientos en nubes",
+    "categoria": "estres",
+    "descripcion": "Técnica de mindfulness cognitivo para desidentificarse de los pensamientos ansiosos.",
+    "pasos": "1. Siéntate cómodamente y cierra los ojos.\n2. Imagina un cielo azul y despejado.\n3. Cada pensamiento que aparezca, colócalo en una nube y observa cómo pasa.\n4. No trates de detener los pensamientos, solo obsérvalos pasar.\n5. Recuerda: tú eres el cielo, no las nubes.\n6. Practica durante 5-10 minutos.",
+    "duracion_minutos": 8,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "m4",
+    "nombre": "Comer con atención plena",
+    "categoria": "estres",
+    "descripcion": "Práctica de mindfulness aplicada a la alimentación para reducir el estrés y la alimentación emocional.",
+    "pasos": "1. Elige un alimento pequeño: una uva, una nuez, un trozo de chocolate.\n2. Observa su color, forma, textura con atención plena.\n3. Huélelo antes de llevarlo a la boca.\n4. Colócalo en tu boca SIN morderlo. Siente su textura.\n5. Mastícalo lentamente notando cada sabor.\n6. Trágalo con consciencia plena.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "c1",
+    "nombre": "Reencuadre cognitivo",
+    "categoria": "tristeza",
+    "descripcion": "Técnica de TCC para identificar y transformar pensamientos automáticos negativos en interpretaciones más equilibradas.",
+    "pasos": "1. Identifica el pensamiento negativo automático: escríbelo.\n2. Pregúntate: ¿Qué evidencia tengo de que esto es verdad?\n3. Pregúntate: ¿Qué evidencia tengo de que NO es verdad?\n4. Pregúntate: ¿Cómo lo vería un amigo que me quiere?\n5. Genera una versión más equilibrada y realista del pensamiento.\n6. Léela en voz alta 3 veces.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "c2",
+    "nombre": "Registro de pensamientos ABC",
+    "categoria": "tristeza",
+    "descripcion": "Herramienta de terapia cognitivo-conductual para analizar la relación entre eventos, creencias y emociones.",
+    "pasos": "1. A (Antecedente): Describe el evento o situación que desencadenó la emoción.\n2. B (Belief/Creencia): ¿Qué pensaste automáticamente sobre ese evento?\n3. C (Consecuencia): ¿Qué emoción sentiste y qué hiciste?\n4. D (Disputa): Cuestiona la creencia: ¿Es realista? ¿Es útil?\n5. E (Efecto): Genera una creencia alternativa más equilibrada.\n6. Escribe cómo cambiaría tu emoción con esa nueva creencia.",
+    "duracion_minutos": 15,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "c3",
+    "nombre": "Técnica de la flecha hacia abajo",
+    "categoria": "tristeza",
+    "descripcion": "Técnica de TCC para descubrir creencias centrales profundas detrás de pensamientos automáticos.",
+    "pasos": "1. Anota el pensamiento negativo que te preocupa.\n2. Pregunta: 'Si esto fuera verdad, ¿qué significaría para mí?'\n3. Toma esa respuesta y vuelve a preguntar: '¿Y si eso fuera verdad, qué significaría?'\n4. Repite 3-5 veces hasta llegar a la creencia central.\n5. Evalúa esa creencia: ¿La adquiriste de niño? ¿Sigue siendo válida hoy?\n6. Reformúlala en un enunciado más compasivo hacia ti mismo.",
+    "duracion_minutos": 15,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "c4",
+    "nombre": "Defusión cognitiva",
+    "categoria": "tristeza",
+    "descripcion": "Técnica de ACT (Terapia de Aceptación y Compromiso) para reducir el impacto de pensamientos intrusivos.",
+    "pasos": "1. Identifica un pensamiento que te genera malestar (ej: 'Soy un fracaso').\n2. Agrega el prefijo: 'Estoy teniendo el pensamiento de que... soy un fracaso'.\n3. Luego: 'Me doy cuenta de que estoy teniendo el pensamiento de que soy un fracaso'.\n4. Imagina el pensamiento como una hoja que flota en un río.\n5. Observa cómo pasa sin aferrarte a él.\n6. Recuerda: tú no eres tus pensamientos.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "t1",
+    "nombre": "Autocompasión de Kristin Neff",
+    "categoria": "tristeza",
+    "descripcion": "Práctica de autocompasión basada en evidencia científica con tres componentes: mindfulness, humanidad compartida y amabilidad.",
+    "pasos": "1. Mindfulness: Reconoce el sufrimiento sin exagerarlo ni minimizarlo. Di: 'Esto es difícil. Estoy sufriendo ahora mismo'.\n2. Humanidad compartida: Recuerda que el sufrimiento es parte de la experiencia humana. Di: 'No estoy solo/a. Todas las personas sufren'.\n3. Amabilidad hacia uno mismo: Coloca una mano en el corazón y di: '¿Qué necesito escuchar ahora mismo?' Dítelo con gentileza.\n4. Repite las tres frases hasta sentir un poco más de calma.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "t2",
+    "nombre": "Carta de autocompasión",
+    "categoria": "tristeza",
+    "descripcion": "Escribir una carta a uno mismo desde la perspectiva de un amigo compasivo para procesar emociones difíciles.",
+    "pasos": "1. Piensa en algo que te esté causando sufrimiento o vergüenza.\n2. Imagina que tienes un amigo sabio, cálido y compasivo que conoce toda tu historia.\n3. Escribe una carta desde ese amigo hacia ti, con todo el cuidado que él te daría.\n4. El amigo reconoce tu dolor, no te juzga, comprende tu humanidad y te ofrece palabras de apoyo.\n5. Lee la carta en voz alta para ti mismo.\n6. Guárdala para los momentos difíciles.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "s1",
+    "nombre": "Activación conductual",
+    "categoria": "tristeza",
+    "descripcion": "Técnica de TCC para combatir la depresión mediante la programación de actividades que generan placer o sensación de logro.",
+    "pasos": "1. Haz una lista de 10 actividades que antes disfrutabas o que te dan sensación de logro.\n2. Clasifícalas en: placer (P), logro (L), o ambas (PL).\n3. Programa al menos una actividad P y una actividad L para cada día de la semana.\n4. Empieza con las más pequeñas y fáciles.\n5. Después de hacerla, anota en una escala del 1-10 cómo te sentiste.\n6. Revisa al final de la semana si hay correlación entre actividad y estado de ánimo.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "s2",
+    "nombre": "Gratitud activa",
+    "categoria": "tristeza",
+    "descripcion": "Práctica respaldada por psicología positiva que re-entrena el cerebro para notar lo que va bien.",
+    "pasos": "1. Cada noche antes de dormir, anota 3 cosas buenas que pasaron hoy.\n2. Pueden ser pequeñas: un café rico, una canción que te gustó, una conversación agradable.\n3. Para cada una, escribe brevemente: ¿Por qué pasó esto? ¿Qué dice de ti o del mundo?\n4. Practica durante 21 días consecutivos.\n5. Si un día no encuentras nada, busca algo neutro: 'seguí vivo', 'respiré'.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "s3",
+    "nombre": "Programación de actividades sociales",
+    "categoria": "tristeza",
+    "descripcion": "Contra-ataque al aislamiento social propio de la depresión mediante compromisos sociales estructurados.",
+    "pasos": "1. Identifica a 2-3 personas con las que te sientes bien.\n2. Programa un contacto concreto con cada una esta semana (no 'quizás'; algo específico: llamada el martes a las 7pm).\n3. Comienza con algo pequeño: un mensaje, una videollamada de 10 minutos.\n4. No esperes tener ganas; actúa primero, las ganas suelen venir después.\n5. Anota cómo te sentiste antes, durante y después del contacto.",
+    "duracion_minutos": 30,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "e1",
+    "nombre": "Movimiento de 5 minutos",
+    "categoria": "estres",
+    "descripcion": "Actividad física breve para liberar cortisol y adrenalina acumulados por el estrés.",
+    "pasos": "1. Párate de donde estás.\n2. Realiza 10 saltos de tijera (jumping jacks).\n3. Haz 10 sentadillas lentas y profundas.\n4. Estira los hombros: gira cada uno hacia atrás 5 veces.\n5. Sacude las manos y los brazos durante 30 segundos.\n6. Respira profundo 3 veces y nota cómo se siente tu cuerpo ahora.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "e2",
+    "nombre": "Escritura expresiva de Pennebaker",
+    "categoria": "estres",
+    "descripcion": "Técnica de escritura libre sobre eventos estresantes que reduce el impacto emocional y mejora el bienestar.",
+    "pasos": "1. Busca 15-20 minutos de privacidad.\n2. Elige un evento o situación que te genera estrés o malestar.\n3. Escribe sin parar sobre tus pensamientos y sentimientos más profundos al respecto.\n4. No te preocupes por la gramática ni la coherencia.\n5. Si en algún momento te angustias demasiado, puedes parar.\n6. Practica 3-4 días consecutivos sobre el mismo tema.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "e3",
+    "nombre": "Técnica del tiempo preocupado",
+    "categoria": "ansiedad",
+    "descripcion": "Estrategia cognitivo-conductual para contener las preocupaciones en un espacio de tiempo delimitado.",
+    "pasos": "1. Designa un 'tiempo de preocupación' fijo: 15-20 minutos, siempre a la misma hora (ej: 5pm). NUNCA antes de dormir.\n2. Cuando surja una preocupación fuera de ese horario, anótala brevemente y pospónla: 'Me preocuparé de esto a las 5pm'.\n3. Al llegar el tiempo preocupado, siéntate con tu lista y preocúpate activamente.\n4. Para cada preocupación pregunta: ¿Puedo hacer algo al respecto? Si sí, planifica. Si no, practica aceptación.\n5. Cuando terminen los 20 minutos, cierra el cuaderno.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "e4",
+    "nombre": "Visualización de lugar seguro",
+    "categoria": "ansiedad",
+    "descripcion": "Técnica de imaginería guiada para crear un refugio mental durante momentos de angustia intensa.",
+    "pasos": "1. Cierra los ojos y respira profundo 3 veces.\n2. Imagina un lugar donde te sientes completamente seguro y en calma: puede ser real o imaginario.\n3. Explora ese lugar con todos tus sentidos: ¿qué ves? ¿qué escuchas? ¿qué hueles? ¿qué temperatura hace?\n4. Permanece en ese lugar durante 5-10 minutos, simplemente siendo.\n5. Crea una 'señal de anclaje': toca tu pulgar con el dedo índice mientras estás en tu lugar seguro.\n6. En momentos de angustia, usa esa señal para volver al lugar.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "e5",
+    "nombre": "Relajación muscular progresiva de Jacobson",
+    "categoria": "estres",
+    "descripcion": "Técnica de tensión-relajación sistemática de grupos musculares para liberar estrés físico acumulado.",
+    "pasos": "1. Recuéstate o siéntate cómodamente. Cierra los ojos.\n2. Empieza por los pies: tensa los músculos del pie derecho durante 5 segundos, luego suelta y nota la diferencia por 10 segundos.\n3. Sube por pantorrilla, muslo, abdomen, manos, brazos, hombros, cuello, cara.\n4. En cada grupo muscular: tensa 5 segundos, suelta 10 segundos.\n5. Al terminar, permanece en silencio disfrutando la relajación completa.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "e6",
+    "nombre": "TIPP (Temperatura, Intenso ejercicio, Respiración pausada, Relajación progresiva)",
+    "categoria": "ansiedad",
+    "descripcion": "Habilidad DBT de tolerancia al malestar para crisis emocionales intensas.",
+    "pasos": "1. TEMPERATURA: Sumerge la cara en agua fría durante 30 segundos o aplica compresas frías en la frente y cuello.\n2. INTENSIDAD: Haz ejercicio intenso durante 20 minutos para quemar la adrenalina (correr, saltar, etc.).\n3. RESPIRACIÓN PAUSADA: Respira lentamente: inhala 4 seg, exhala 6 seg. La exhalación más larga activa el freno vagal.\n4. RELAJACIÓN PROGRESIVA: Termina con relajación muscular progresiva.\nUsa solo los pasos que sean posibles en tu situación.",
+    "duracion_minutos": 25,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "d1",
+    "nombre": "Higiene del sueño básica",
+    "categoria": "estres",
+    "descripcion": "Conjunto de hábitos respaldados por evidencia para mejorar la calidad del sueño y reducir el insomnio.",
+    "pasos": "1. Mantén un horario fijo: despiértate y duerme a la misma hora todos los días, incluyendo fines de semana.\n2. Evita pantallas 60 minutos antes de dormir (o usa modo oscuro + filtro azul).\n3. Mantén la habitación fresca (18-20°C), oscura y silenciosa.\n4. Evita cafeína después de las 2pm.\n5. Si no puedes dormir en 20 minutos, levántate y haz algo tranquilo hasta sentir sueño.\n6. Usa la cama solo para dormir, no para trabajar o mirar series.",
+    "duracion_minutos": 0,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "d2",
+    "nombre": "Rutina de desconexión nocturna",
+    "categoria": "estres",
+    "descripcion": "Protocolo de preparación para el sueño que señaliza al cerebro el inicio del descanso.",
+    "pasos": "1. A la misma hora cada noche, inicia tu rutina (45-60 min antes de dormir).\n2. Cierra correos y redes sociales. El trabajo del día terminó.\n3. Escribe 3 tareas prioritarias para mañana y cierra el cuaderno.\n4. Date una ducha tibia.\n5. Lee ficción (no trabajo, no noticias) o practica meditación suave.\n6. Disminuye las luces de tu espacio gradualmente.",
+    "duracion_minutos": 45,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "v1",
+    "nombre": "Valores y brújula vital (ACT)",
+    "categoria": "tristeza",
+    "descripcion": "Ejercicio de Terapia de Aceptación y Compromiso para reconectar con los valores personales y recuperar dirección de vida.",
+    "pasos": "1. Reflexiona: Si pudieras diseñar la vida que quieres vivir, ¿qué sería importante para ti? (familia, creatividad, salud, etc.)\n2. Elige 3-5 valores que resuenen con lo que más importa.\n3. Para cada valor, pregunta: ¿Estoy viviendo de acuerdo a este valor? Del 1 al 10, ¿cuánto?\n4. Elige el valor con más brecha entre lo que es y lo que quieres.\n5. Define UNA acción concreta y pequeña que puedas hacer esta semana en dirección a ese valor.\n6. Comprométete con esa acción.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "v2",
+    "nombre": "Acto de bondad aleatorio",
+    "categoria": "tristeza",
+    "descripcion": "Práctica de psicología positiva: realizar un acto de bondad eleva el estado de ánimo propio y fortalece lazos sociales.",
+    "pasos": "1. Hoy, haz algo amable por alguien sin esperar nada a cambio.\n2. Puede ser pequeño: un mensaje de apoyo, ceder el paso, comprar algo a alguien.\n3. Hazlo de forma espontánea y sin anunciarlo.\n4. Después, nota cómo te sientes: el acto de dar activa el sistema de recompensa del cerebro.\n5. Repite 3 veces por semana durante un mes y observa el efecto en tu ánimo.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "r1",
+    "nombre": "Resolución de problemas estructurada",
+    "categoria": "estres",
+    "descripcion": "Modelo de 6 pasos para abordar problemas concretos de forma sistemática y reducir la sensación de descontrol.",
+    "pasos": "1. Define el problema con precisión (no 'todo está mal', sino 'no tengo suficiente dinero para pagar X').\n2. Genera al menos 5 posibles soluciones sin juzgarlas.\n3. Evalúa pros y contras de cada una.\n4. Elige la mejor solución disponible, no la perfecta.\n5. Planifica los pasos concretos para implementarla: ¿Qué, cuándo, cómo, con qué?\n6. Ejecútala y evalúa el resultado. Ajusta si es necesario.",
+    "duracion_minutos": 30,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "r2",
+    "nombre": "Técnica STOP",
+    "categoria": "ansiedad",
+    "descripcion": "Microintervención de mindfulness para interrumpir el piloto automático en momentos de estrés.",
+    "pasos": "1. S - STOP: Para lo que estás haciendo en este momento.\n2. T - TAKE a breath: Respira profundo, lento, consciente.\n3. O - OBSERVE: Observa qué está pasando en tu cuerpo, mente y alrededor.\n4. P - PROCEED: Continúa con lo que estabas haciendo, pero ahora de forma más consciente.\nPuede hacerse en 60 segundos en cualquier lugar.",
+    "duracion_minutos": 1,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "r3",
+    "nombre": "Afirmaciones positivas basadas en evidencia",
+    "categoria": "tristeza",
+    "descripcion": "Uso de autoafirmaciones específicas y creíbles para activar el sistema de valores y reducir el estrés.",
+    "pasos": "1. Elige un valor o cualidad que genuinamente tienes (aunque a veces dudes de ella).\n2. Escribe una afirmación en primera persona, presente, específica: 'Soy alguien que se preocupa por los demás' (no 'Soy perfecto').\n3. Lee la afirmación en voz alta frente al espejo 3 veces.\n4. Cierra los ojos y recuerda una situación real donde esa cualidad se manifestó.\n5. Repite mañana y tarde por 7 días.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "p1",
+    "nombre": "Técnica de aceptación radical (DBT)",
+    "categoria": "tristeza",
+    "descripcion": "Habilidad DBT para aceptar la realidad tal como es, sin aprobación, para reducir el sufrimiento secundario.",
+    "pasos": "1. Identifica la situación que estás resistiendo o que te genera lucha interna.\n2. Recuerda: aceptar no significa aprobar. Significa dejar de pelear contra lo que ya ocurrió.\n3. Di en voz alta: 'Esta situación ocurrió. Es real. No puedo cambiar el pasado'.\n4. Observa la resistencia en tu cuerpo: ¿dónde la sientes? Respira hacia esa zona.\n5. Pregunta: '¿Qué puedo hacer ahora, con lo que hay, para seguir adelante?'\n6. Comprométete con un pequeño paso.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "p2",
+    "nombre": "Surfing del impulso (Urge Surfing)",
+    "categoria": "ansiedad",
+    "descripcion": "Técnica mindfulness de Alan Marlatt para observar impulsos sin actuar sobre ellos, útil en ansiedad y adicciones.",
+    "pasos": "1. Cuando sientas un impulso intenso (comer, revisar el teléfono, discutir), párate.\n2. Observa el impulso como si fuera una ola: tiene un inicio, una cima y un descenso.\n3. Nota dónde lo sientes en el cuerpo. ¿Qué tan intenso es del 1 al 10?\n4. Respira profundo y simplemente observa: no lo alimentes ni lo pelees.\n5. Nota cómo la intensidad sube... llega a su pico... y baja sola en 5-10 minutos.\n6. El impulso nunca es permanente si no actúas sobre él.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "p3",
+    "nombre": "Técnica DEAR MAN (comunicación asertiva)",
+    "categoria": "estres",
+    "descripcion": "Habilidad DBT de efectividad interpersonal para comunicar necesidades de forma clara y asertiva.",
+    "pasos": "1. D - DESCRIBE: Describe la situación objetivamente, sin juicios.\n2. E - EXPRESS: Expresa cómo te sientes al respecto ('Yo siento...').\n3. A - ASSERT: Pide específicamente lo que necesitas.\n4. R - REINFORCE: Explica los beneficios de que la otra persona acceda.\n5. M - MINDFUL: Mantente enfocado en tu objetivo, sin desvíarte.\n6. A - APPEAR CONFIDENT: Actúa con confianza aunque no la sientas.\n7. N - NEGOTIATE: Ofrece alternativas si es necesario.",
+    "duracion_minutos": 15,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "n1",
+    "nombre": "Diario emocional",
+    "categoria": "tristeza",
+    "descripcion": "Práctica de escritura reflexiva para procesar emociones, identificar patrones y ampliar vocabulario emocional.",
+    "pasos": "1. Cada día, escribe la respuesta a estas 3 preguntas: ¿Qué emoción principal siento hoy? ¿Qué la desencadenó? ¿Qué necesito?\n2. No edites ni juzgues lo que escribes.\n3. Una vez por semana, relee entradas anteriores y busca patrones: ¿Qué situaciones te generan más malestar? ¿Cuáles más bienestar?\n4. Con el tiempo, la sola práctica de nombrar emociones las regula (efecto 'nombre para domar').",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "n2",
+    "nombre": "Rueda de emociones",
+    "categoria": "tristeza",
+    "descripcion": "Herramienta para ampliar el vocabulario emocional y aumentar la granularidad en la identificación de emociones.",
+    "pasos": "1. Cuando sientas una emoción difusa o intensa, busca la rueda de emociones.\n2. Empieza por las 6 emociones básicas del centro: alegría, tristeza, miedo, ira, sorpresa, disgusto.\n3. Identifica la que más se acerca a lo que sientes.\n4. Ve hacia el exterior de la rueda para encontrar el nombre más preciso.\n5. Nombrar la emoción con precisión activa la corteza prefrontal y reduce la intensidad.\n6. Pregúntate: ¿Qué necesita esta emoción de mí?",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "n3",
+    "nombre": "Red de apoyo social",
+    "categoria": "tristeza",
+    "descripcion": "Mapeo y activación deliberada de la red de apoyo para combatir el aislamiento.",
+    "pasos": "1. Dibuja 3 círculos concéntricos. En el centro: personas íntimas. En el segundo: amigos cercanos. En el tercero: conocidos.\n2. Escribe los nombres de personas que pertenecen a cada círculo.\n3. Identifica: ¿A quién puedo llamar a las 3am? ¿Quién me hace reír? ¿Quién me da perspectiva?\n4. Si los círculos están vacíos, esto es información valiosa. ¿Qué pequeño paso puedes dar para ampliar tu red?\n5. Esta semana, conecta activamente con alguien de cada círculo.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "f1",
+    "nombre": "Exposición gradual",
+    "categoria": "ansiedad",
+    "descripcion": "Técnica de TCC para reducir el miedo y la evitación mediante exposición progresiva a situaciones temidas.",
+    "pasos": "1. Identifica la situación que evitas por ansiedad.\n2. Crea una jerarquía de miedos del 1 al 10 en intensidad (escala SUDS).\n3. Empieza por el ítem que puntúas entre 3-4 de ansiedad.\n4. Exponerte a esa situación hasta que la ansiedad baje al menos un 50% (sin escapar).\n5. Repite hasta que ese ítem no genere ansiedad.\n6. Sube al siguiente peldaño de la jerarquía.",
+    "duracion_minutos": 30,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "f2",
+    "nombre": "Técnica RAIN de mindfulness",
+    "categoria": "ansiedad",
+    "descripcion": "Práctica de mindfulness emocional para relacionarse con emociones difíciles sin fusionarse con ellas.",
+    "pasos": "1. R - RECOGNICE (Reconocer): Nombra lo que estás sintiendo. 'Hay miedo aquí'.\n2. A - ALLOW (Permitir): Deja que la emoción esté sin intentar eliminarla.\n3. I - INVESTIGATE (Investigar): Con curiosidad y gentileza, explora cómo se siente en el cuerpo. ¿Dónde? ¿Cómo?\n4. N - NURTURE (Nutrir): Ofrécete el cuidado que necesitas. ¿Qué necesita esta parte de ti ahora mismo?\n5. Descansa en la presencia abierta después de completar los 4 pasos.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "f3",
+    "nombre": "Meditación de bondad amorosa (Loving-Kindness)",
+    "categoria": "tristeza",
+    "descripcion": "Práctica budista secular que cultiva sentimientos de amor y compasión hacia uno mismo y los demás.",
+    "pasos": "1. Siéntate cómodamente, cierra los ojos, respira profundo.\n2. Empieza por ti mismo. Repite lentamente: 'Que yo sea feliz. Que yo esté bien. Que yo esté libre de sufrimiento. Que yo esté en paz'.\n3. Trae a la mente a alguien que amas. Envíale los mismos deseos.\n4. Piensa en alguien neutral (una persona que ves pero no conoces bien). Envíale los deseos.\n5. Si te animas, incluye a alguien difícil. Envíale los deseos.\n6. Finalmente, expande a todos los seres vivientes.",
+    "duracion_minutos": 15,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "o1",
+    "nombre": "Técnica de distracción controlada",
+    "categoria": "ansiedad",
+    "descripcion": "Uso estratégico de actividades absorbentes para interrumpir el ciclo de rumia o ansiedad intensa.",
+    "pasos": "1. Crea con anticipación una 'caja de herramientas de distracción' con actividades que requieren concentración: videojuegos, puzles, cocinar, llamar a alguien.\n2. Cuando la emoción sea muy intensa (8/10 o más), elige una actividad de tu caja.\n3. Comprométete con ella durante al menos 20 minutos.\n4. Importante: la distracción es para bajar la intensidad, NO para evitar el problema permanentemente.\n5. Una vez que la intensidad bajó, vuelve a la situación con más recursos.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "o2",
+    "nombre": "Técnica del semáforo emocional",
+    "categoria": "ansiedad",
+    "descripcion": "Herramienta de regulación emocional para niños y adultos que usa los colores del semáforo para identificar y gestionar estados emocionales.",
+    "pasos": "1. ROJO: Identifica cuándo estás en rojo (muy activado, a punto de explotar). Para TODO.\n2. En rojo: respira profundo 3 veces. No tomes decisiones. No respondas mensajes.\n3. AMARILLO: Espera y piensa. ¿Qué está pasando? ¿Qué necesito? ¿Cuáles son mis opciones?\n4. VERDE: Actúa con calma y consciencia.\n5. Practica identificar en qué color estás varias veces al día.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "o3",
+    "nombre": "Meditación caminando",
+    "categoria": "estres",
+    "descripcion": "Práctica de mindfulness en movimiento que integra cuerpo y mente, especialmente útil cuando sentarse es difícil.",
+    "pasos": "1. Elige un espacio de 5-10 metros donde puedas caminar de un lado al otro.\n2. Camina más despacio de lo normal. Mucho más despacio.\n3. Lleva toda la atención a los pies: el momento en que se levantan, se mueven en el aire, aterrizan.\n4. Cuando la mente se distraiga, vuelve a los pies.\n5. Puedes coordinar la respiración: inhala 2 pasos, exhala 2 pasos.\n6. Practica 10-15 minutos.",
+    "duracion_minutos": 12,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "o4",
+    "nombre": "Técnica de la observación del pensamiento rumiativo",
+    "categoria": "tristeza",
+    "descripcion": "Identificar y etiquetar patrones de rumia para reducir su impacto.",
+    "pasos": "1. Cuando notes que estás dando vueltas a lo mismo, párate y di: 'Estoy rumiando'.\n2. Pregúntate: ¿Este pensamiento es sobre el pasado (culpa/vergüenza) o el futuro (preocupación/ansiedad)?\n3. ¿Tiene solución? Si sí, actúa. Si no, practica aceptación.\n4. Redirige tu atención a algo concreto y presente (una tarea, una persona, tu cuerpo).\n5. Practica reduciendo el tiempo de rumia cada vez que lo detectas.",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "q1",
+    "nombre": "Técnica de los 4 pasos de Jeffrey Schwartz (TOC/ansiedad)",
+    "categoria": "ansiedad",
+    "descripcion": "Protocolo neurobiológico para responder a pensamientos intrusivos con claridad y sin obedecerlos.",
+    "pasos": "1. RE-ETIQUETAR: Reconoce el pensamiento o impulso ansioso como síntoma, no como verdad. 'Es mi ansiedad, no es real'.\n2. RE-ATRIBUIR: Entiende que viene de un patrón neurológico, no de una amenaza real.\n3. RE-ENFOCAR: Cambia tu atención a otra actividad durante 15-30 minutos sin responder al impulso.\n4. RE-VALORAR: Con el tiempo, el pensamiento perderá su poder. Observa cómo disminuye.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "q2",
+    "nombre": "Protocolo de autocuidado básico",
+    "categoria": "estres",
+    "descripcion": "Revisión de los pilares básicos del bienestar físico que impactan directamente en la salud mental.",
+    "pasos": "1. SUEÑO: ¿Estás durmiendo entre 7-9 horas? Si no, ¿qué un cambio puedes hacer hoy?\n2. ALIMENTACIÓN: ¿Comiste hoy? ¿Tomaste suficiente agua? El cerebro necesita glucosa para regular emociones.\n3. MOVIMIENTO: ¿Te moviste hoy? Aunque sea una caminata de 10 minutos.\n4. CONEXIÓN: ¿Hablaste con alguien hoy? El aislamiento amplifica el malestar.\n5. Elige uno de estos pilares y comprométete a mejorarlo esta semana.",
+    "duracion_minutos": 10,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "q3",
+    "nombre": "Técnica de validación emocional propia",
+    "categoria": "tristeza",
+    "descripcion": "Práctica de reconocimiento y validación de las propias emociones para reducir la autocrítica.",
+    "pasos": "1. Identifica la emoción que sientes sin juzgarla.\n2. Di en voz alta o por escrito: 'Tiene sentido que sienta [emoción] porque [razón]'.\n3. Valida el contexto: cualquier persona en tu situación podría sentir algo similar.\n4. No intentes que la emoción desaparezca; solo reconócela como válida.\n5. Pregunta: '¿Qué necesita esta emoción? ¿Qué acción pequeña me acercaría a lo que necesito?'",
+    "duracion_minutos": 5,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "q4",
+    "nombre": "Técnica de la media sonrisa (Half-Smile)",
+    "categoria": "tristeza",
+    "descripcion": "Técnica DBT basada en la retroalimentación facial: la expresión corporal influye en el estado emocional.",
+    "pasos": "1. Relaja los músculos de la cara: frente, ojos, mandíbula.\n2. Lleva las comisuras de los labios suavemente hacia arriba, de forma apenas perceptible.\n3. No fuerces una sonrisa grande: solo media sonrisa, como la de un Buda sereno.\n4. Mantén durante 1-2 minutos mientras respiras profundo.\n5. Úsala especialmente cuando te levantes, cuando conduzcas o cuando estés en una situación difícil.",
+    "duracion_minutos": 2,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "q5",
+    "nombre": "Lista de razones para vivir",
+    "categoria": "tristeza",
+    "descripcion": "Herramienta de seguridad para momentos de crisis: una lista personalizada de razones para continuar.",
+    "pasos": "1. En un momento de calma (no en crisis), escribe una lista de todas las razones para seguir viviendo.\n2. Incluye: personas que te importan, metas pendientes, placeres simples, cosas que aún quieres vivir.\n3. Sé específico: no 'mi familia' sino 'ver a mi sobrina crecer'.\n4. Guarda la lista en un lugar accesible (teléfono, cartera).\n5. En un momento de crisis intensa, léela antes de tomar cualquier decisión.\n6. Si los pensamientos de hacerte daño persisten, llama a una línea de crisis.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "alto"
+  },
+  {
+    "id": "w1",
+    "nombre": "Técnica de anclaje 3-3-3",
+    "categoria": "ansiedad",
+    "descripcion": "Versión simplificada del grounding sensorial para uso rápido en momentos de pánico.",
+    "pasos": "1. Mira a tu alrededor y nombra 3 cosas que puedes VER.\n2. Escucha y nombra 3 sonidos que puedes ESCUCHAR ahora mismo.\n3. Mueve 3 partes de tu cuerpo: dedos, hombros, pies.\n4. Respira profundo 3 veces.\nTodo el ejercicio toma menos de 2 minutos.",
+    "duracion_minutos": 2,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "w2",
+    "nombre": "Técnica de la silla vacía (Gestalt)",
+    "categoria": "tristeza",
+    "descripcion": "Técnica de Terapia Gestalt para procesar emociones no expresadas hacia otra persona o hacia uno mismo.",
+    "pasos": "1. Coloca una silla vacía frente a ti.\n2. Imagina que en esa silla está la persona (o parte de ti) con quien tienes algo pendiente.\n3. Dile todo lo que nunca has podido decir, en voz alta.\n4. Luego, siéntate en esa silla y responde como si fueras esa persona o parte.\n5. Alterna entre las dos sillas hasta que sientas que algo se movió.\n6. Termina con una respiración profunda y anota lo que surgió.",
+    "duracion_minutos": 20,
+    "nivel_evidencia": "moderado"
+  },
+  {
+    "id": "w3",
+    "nombre": "Plan de seguridad ante crisis",
+    "categoria": "tristeza",
+    "descripcion": "Documento personal de intervención en crisis que se prepara con anticipación para los momentos de mayor vulnerabilidad.",
+    "pasos": "1. Señales de alerta: ¿Qué piensas, sientes o haces cuando la crisis se acerca?\n2. Estrategias propias: ¿Qué te ha funcionado antes para calmarte?\n3. Personas de apoyo: Anota 2-3 nombres y sus números de teléfono.\n4. Profesionales: Nombre y número de tu psicólogo/psiquiatra.\n5. Líneas de crisis: SAPTEL México 55 5259-8121 · Línea de la Vida 800 911-2000.\n6. Medios de acceso: ¿Hay algo en casa que debas alejar de ti en momentos de crisis?\nGuarda este plan en tu teléfono.",
+    "duracion_minutos": 30,
+    "nivel_evidencia": "alto"
+  }
+]

@@ -1,0 +1,174 @@
+================================================================================
+  SERENEAI — REPORTE DE PROGRESO
+  Hackathon OxBuild · Oxlo.ai · 2026
+  Última actualización: 31 marzo 2026 — v3 (sesión nocturna completada)
+================================================================================
+
+ESTADO GENERAL: ETAPA 1 ✅ COMPLETA — ETAPA 2 ✅ CASI COMPLETA — ETAPA 3 PENDIENTE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+────────────────────────────────────────────────────────────────────────────────
+1. ESTRUCTURA DEL PROYECTO  ✅ COMPLETO
+────────────────────────────────────────────────────────────────────────────────
+
+  SereneAI/
+  ├── backend/
+  │   ├── main.py                    ✅  FastAPI con 6 endpoints (integrado con system_prompt)
+  │   ├── sereneai_system_prompt.py  ✅  Crisis, limpieza DeepSeek, system prompt, imagen
+  │   ├── requirements.txt           ✅  fastapi, uvicorn, httpx, numpy, python-dotenv
+  │   └── test_api.py                ✅  Script diagnóstico (borrar antes del deploy final)
+  ├── frontend/
+  │   └── index.html                 ✅  SPA completa — LISTO PARA PRUEBA EN NAVEGADOR
+  ├── data/
+  │   ├── knowledge_base.json        ✅  53 técnicas clínicas validadas
+  │   └── embeddings.json            ✅  53 vectores BGE-Large (1024 dims) — VERIFICADO
+  ├── docs/                          ✅  Creada (vacía — para capturas y demo)
+  ├── .env                           ✅  API key Premium configurada
+  ├── .env.example                   ✅
+  ├── .gitignore                     ✅  Incluye .env y embeddings.json
+  └── README.md                      ✅  Base completa (faltan secciones del hackathon)
+
+────────────────────────────────────────────────────────────────────────────────
+2. ENDPOINTS — ESTADO DE PRUEBA
+────────────────────────────────────────────────────────────────────────────────
+
+  ┌──────────────────────────────┬──────────────────┬───────────────────────────────────────────┐
+  │ Ruta                         │ Estado           │ Notas                                     │
+  ├──────────────────────────────┼──────────────────┼───────────────────────────────────────────┤
+  │ GET  /health                 │ ✅ VERIFICADO    │ KB=53, embeddings=53                      │
+  │ POST /generate-embeddings    │ ✅ VERIFICADO    │ 53/53 generados, cacheados en JSON        │
+  │ POST /chat                   │ ✅ VERIFICADO    │ RAG funcionando, sin <think>, español ✓   │
+  │ POST /synthesize             │ ✅ VERIFICADO    │ Devuelve WAV (no MP3) — ya corregido ✓   │
+  │ POST /generate-card          │ ✅ VERIFICADO    │ Devuelve data:image/png;base64 ✓          │
+  │ POST /transcribe             │ ⚠️ SIN PROBAR   │ Código correcto, falta prueba con audio   │
+  └──────────────────────────────┴──────────────────┴───────────────────────────────────────────┘
+
+────────────────────────────────────────────────────────────────────────────────
+3. BUGS ENCONTRADOS Y CORREGIDOS ESTA SESIÓN
+────────────────────────────────────────────────────────────────────────────────
+
+  ✅ Rate limit 429 (plan free) → Solucionado subiendo a plan Premium (código OXBUILD)
+  ✅ Retry infinito (retry_after: 83624s) → Cortado con: if retry_after > 120: raise
+  ✅ 401 tras cambiar API key → Era necesario reiniciar uvicorn completamente
+  ✅ 502 transiente en técnica n3 → Reintento con asyncio.sleep(5) hasta 3 veces
+  ✅ Kokoro devuelve WAV no MP3 → Backend detecta magic bytes b"RIFF", frontend usa format dinámico
+  ✅ sereneai_system_prompt.py en raíz → Copiado a backend/ para que el import funcione
+  ✅ Frontend: crisis nunca mostraba el banner → Bug: destructuraba "crisis" pero backend envía "es_crisis"
+     Corrección aplicada en frontend/index.html línea 442:
+     ANTES: const { response, crisis } = await chatResp.json();
+     AHORA:  const { response, es_crisis: crisis } = await chatResp.json();
+
+────────────────────────────────────────────────────────────────────────────────
+4. LO QUE QUEDÓ PENDIENTE — EMPEZAR AQUÍ MAÑANA
+────────────────────────────────────────────────────────────────────────────────
+
+  ╔══════════════════════════════════════════════════════════════════════════════╗
+  ║  PUNTO DE REANUDACIÓN — 1 DE ABRIL                                         ║
+  ║                                                                              ║
+  ║  PASO INMEDIATO: Probar el flujo completo en el navegador                   ║
+  ║                                                                              ║
+  ║  Terminal 1 (backend — si no está corriendo):                               ║
+  ║    cd C:\Users\w11\Documents\VisualStudio\SereneAI\backend                  ║
+  ║    uvicorn main:app --reload                                                ║
+  ║                                                                              ║
+  ║  Terminal 2 (frontend):                                                     ║
+  ║    python -m http.server 5500 --directory                                   ║
+  ║      C:\Users\w11\Documents\VisualStudio\SereneAI\frontend                  ║
+  ║                                                                              ║
+  ║  Abrir en Chrome o Edge: http://localhost:5500                              ║
+  ║                                                                              ║
+  ║  Qué verificar:                                                              ║
+  ║  1. Clic en micrófono → hablar "me siento muy ansioso hoy"                  ║
+  ║  2. Transcripción aparece en pantalla (prueba de /transcribe con WebM)      ║
+  ║  3. SereneAI responde en texto (RAG + DeepSeek)                             ║
+  ║  4. Audio se reproduce automáticamente (Kokoro WAV)                         ║
+  ║  5. Clic en "Finalizar sesión" → aparece imagen motivacional                ║
+  ║                                                                              ║
+  ║  Si /transcribe falla: abrir F12 (DevTools) → pestaña Console              ║
+  ║  para ver el error exacto antes de pedir ayuda                              ║
+  ╚══════════════════════════════════════════════════════════════════════════════╝
+
+────────────────────────────────────────────────────────────────────────────────
+5. PASOS SIGUIENTES EN ORDEN (después de confirmar el flujo en navegador)
+────────────────────────────────────────────────────────────────────────────────
+
+  PASO 2 — Deploy del backend (Railway)  [1-2 abr]
+  ───────────────────────────────────────────────────
+    railway login
+    railway init
+    railway up
+    Variables de entorno a configurar en Railway:
+      OXLO_API_KEY=<tu key>
+      OXLO_BASE_URL=https://api.oxlo.ai/v1
+      CORS_ORIGINS=https://<tu-app>.vercel.app
+
+  PASO 3 — Deploy del frontend (Vercel)  [2 abr]
+  ───────────────────────────────────────────────────
+    En frontend/index.html línea 307:
+      Cambiar: const API_URL = "http://localhost:8000";
+      Por:      const API_URL = "https://<tu-app>.railway.app";
+    Luego: drag & drop de la carpeta frontend/ en vercel.com
+
+  PASO 4 — README final  [3-4 abr]
+  ───────────────────────────────────────────────────
+    Secciones que faltan:
+    [ ] Capturas de pantalla en docs/ (chat funcionando, tarjeta motivacional)
+    [ ] URL pública de la demo (Vercel)
+    [ ] Email registrado en Oxlo.ai
+    [ ] Video demo de 2 minutos — grabar con OBS o Loom
+        Flujo: hablar → transcripción → respuesta en voz → tarjeta
+
+  PASO 5 — Checklist final y envío  [5 abr antes de 23:59]
+  ───────────────────────────────────────────────────────────
+
+────────────────────────────────────────────────────────────────────────────────
+6. CHECKLIST DEL HACKATHON
+────────────────────────────────────────────────────────────────────────────────
+
+  CÓDIGO
+  [✅] Repositorio GitHub público
+  [✅] Estructura de proyecto limpia
+  [✅] Knowledge base (53 técnicas)
+  [✅] Embeddings BGE verificados (53/53)
+  [✅] System prompt con personalidad empática
+  [✅] Detección de crisis con keywords
+  [✅] Limpieza de respuesta DeepSeek (<think>)
+  [✅] /chat probado y funcionando
+  [✅] /synthesize probado (WAV corregido)
+  [✅] /generate-card probado y funcionando
+  [ ] /transcribe probado con audio real
+  [ ] Flujo completo en navegador verificado
+
+  DEPLOY
+  [ ] Backend en Railway con URL pública
+  [ ] Frontend en Vercel con URL pública
+  [ ] API_URL actualizada en index.html
+  [ ] Variables de entorno en producción
+  [ ] CORS_ORIGINS actualizado con URL de Vercel
+
+  ENTREGABLES
+  [ ] README.md completo
+  [ ] Email de Oxlo.ai en el README
+  [ ] Capturas de pantalla en docs/
+  [ ] Video demo de 2 minutos
+  [ ] Enviado antes del 5 abr 23:59
+
+  CRITERIOS DEL JURADO
+  [✅] Relevancia: salud mental en LATAM — caso real y urgente
+  [✅] 5 APIs de Oxlo en un solo flujo (whisper, bge, deepseek, kokoro, image)
+  [ ] Complejidad verificada (flujo completo funcionando)
+  [✅] Código limpio y documentado
+  [ ] URL pública accesible para evaluación
+
+────────────────────────────────────────────────────────────────────────────────
+7. ARCHIVOS QUE NO SE DEBEN COMMITEAR
+────────────────────────────────────────────────────────────────────────────────
+
+  .env                  → API key (ya en .gitignore ✅)
+  data/embeddings.json  → se regenera con /generate-embeddings (ya en .gitignore ✅)
+  backend/test_api.py   → borrar antes del deploy final
+
+================================================================================
+  TIEMPO RESTANTE: 5 días (1 abr → 5 abr)
+  MAÑANA: probar flujo completo → si pasa → Railway deploy
+================================================================================
