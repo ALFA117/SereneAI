@@ -19,6 +19,7 @@ from sereneai_system_prompt import (
     build_image_prompt,
     MENSAJE_CRISIS,
     PROMPT_FRASE_CIERRE,
+    PROMPT_RESUMEN_SESION,
 )
 
 load_dotenv()
@@ -233,10 +234,13 @@ async def chat(req: ChatRequest):
 
     # 2. RAG retrieval
     tecnicas_contexto = None
+    tecnica_principal = None
     if embeddings_cache:
         query_vec = await get_embedding(user_text)
         top_tecnicas = retrieve_top_k(query_vec, k=3)
         tecnicas_contexto = format_tecnicas(top_tecnicas)
+        if top_tecnicas:
+            tecnica_principal = top_tecnicas[0]["nombre"]
 
     # 3. Build system prompt with RAG context
     system_prompt = build_system_prompt(tecnicas_contexto=tecnicas_contexto)
@@ -265,7 +269,7 @@ async def chat(req: ChatRequest):
     # 6. Strip <think>...</think> blocks from DeepSeek R1
     clean = limpiar_respuesta(raw)
 
-    return {"response": clean, "es_crisis": False}
+    return {"response": clean, "es_crisis": False, "tecnica_rag": tecnica_principal}
 
 
 @app.post("/synthesize")
@@ -300,6 +304,30 @@ async def synthesize(payload: dict):
     fmt = "wav" if resp.content[:4] == b"RIFF" else "mp3"
     audio_b64 = base64.b64encode(resp.content).decode("utf-8")
     return {"audio_base64": audio_b64, "format": fmt}
+
+
+@app.post("/session-summary")
+async def session_summary(payload: dict):
+    """Generate a warm session summary using DeepSeek."""
+    messages = payload.get("messages", [])
+    if not messages:
+        raise HTTPException(status_code=400, detail="messages is required")
+
+    messages_payload = [{"role": "system", "content": PROMPT_RESUMEN_SESION}]
+    for msg in messages:
+        messages_payload.append({"role": msg["role"], "content": msg["content"]})
+    messages_payload.append({"role": "user", "content": "Genera el resumen de esta sesión."})
+
+    async with httpx.AsyncClient(timeout=60) as client:
+        resp = await client.post(
+            f"{OXLO_BASE_URL}/chat/completions",
+            headers=oxlo_headers(),
+            json={"model": "deepseek-r1-8b", "messages": messages_payload, "temperature": 0.6, "max_tokens": 150},
+        )
+        resp.raise_for_status()
+
+    raw = resp.json()["choices"][0]["message"]["content"]
+    return {"summary": limpiar_respuesta(raw)}
 
 
 @app.post("/generate-card")

@@ -120,7 +120,7 @@ Recuerda: solo una técnica por respuesta, explicada de forma simple y humana.""
 # PROMPT PARA FRASE DE CIERRE (genera la tarjeta motivacional)
 # ─────────────────────────────────────────────────────────────────────────────
 
-PROMPT_FRASE_CIERRE = """Basándote en la conversación que acabamos de tener, genera UNA sola frase corta (máximo 12 palabras) que resuma el aprendizaje o la fortaleza que el usuario mostró hoy. 
+PROMPT_FRASE_CIERRE = """Basándote en la conversación que acabamos de tener, genera UNA sola frase corta (máximo 12 palabras) que resuma el aprendizaje o la fortaleza que el usuario mostró hoy.
 
 La frase debe:
 - Estar en segunda persona ("Hoy demostraste...", "Tienes la fuerza para...", "Cada respiración te acerca a...")
@@ -129,6 +129,18 @@ La frase debe:
 - No contener signos de exclamación
 
 Responde ÚNICAMENTE con la frase, sin comillas, sin explicaciones adicionales."""
+
+PROMPT_RESUMEN_SESION = """Basándote en la conversación completa, escribe un resumen cálido de 2-3 oraciones sobre lo que el usuario exploró hoy.
+
+Reglas:
+- Usa segunda persona (tú, te, tu)
+- Sé específico sobre lo que se habló, no genérico
+- Tono empático y alentador, como un cierre de sesión terapéutica
+- Sin bullets, sin markdown, solo texto corrido
+- Máximo 60 palabras
+- En español
+
+Responde ÚNICAMENTE con el resumen, sin explicaciones adicionales."""
 
 
 # ─────────────────────────────────────────────────────────────────────────────

@@ -60,9 +60,10 @@
     }
 
     @keyframes bgShift {
-      0%   { opacity: 1; }
-      50%  { opacity: 0.7; }
-      100% { opacity: 1; }
+      0%   { opacity: 1; filter: hue-rotate(0deg) brightness(1); }
+      33%  { opacity: 0.85; filter: hue-rotate(12deg) brightness(1.05); }
+      66%  { opacity: 0.75; filter: hue-rotate(-8deg) brightness(0.95); }
+      100% { opacity: 1; filter: hue-rotate(0deg) brightness(1); }
     }
 
     /* ── App shell ── */
@@ -75,6 +76,18 @@
       z-index: 1;
       overflow: hidden;
     }
+
+    /* ── Timestamps ── */
+    .msg-time {
+      font-size: 0.62rem;
+      color: var(--text3);
+      margin-top: 5px;
+      display: block;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+    }
+    .bubble-row.user .msg-time { text-align: right; }
+    .bubble-row.ai  .msg-time { text-align: left; }
 
     /* ── Header ── */
     header {
@@ -136,6 +149,12 @@
       border-radius: 50%;
       background: currentColor;
       box-shadow: 0 0 5px currentColor;
+      animation: dotPulse 2.5s ease-in-out infinite;
+    }
+    .status-chip.offline .dot { animation: none; }
+    @keyframes dotPulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 5px currentColor; }
+      50%       { opacity: 0.5; box-shadow: 0 0 10px currentColor; }
     }
 
     .hdr-btn {
@@ -152,6 +171,43 @@
     .hdr-btn:hover { background: var(--glass3); color: var(--text); border-color: var(--border2); }
 
     /* ── Settings drawer ── */
+    /* ── Splash screen ── */
+    .splash {
+      position: absolute; inset: 0; z-index: 50;
+      background: var(--bg1);
+      background-image:
+        radial-gradient(ellipse 60% 50% at 30% 20%, rgba(139,124,246,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 40% at 75% 80%, rgba(244,114,182,0.1) 0%, transparent 55%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 14px;
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .splash.hidden { opacity: 0; transform: scale(0.96); pointer-events: none; }
+    .splash-logo {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 0 24px rgba(139,124,246,0.7));
+      animation: splashFloat 3s ease-in-out infinite;
+    }
+    @keyframes splashFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    .splash-title {
+      font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em;
+      background: linear-gradient(90deg, #c4b5fd, #f0abfc);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .splash-sub { font-size: 0.85rem; color: var(--text2); text-align: center; max-width: 220px; line-height: 1.5; }
+    .splash-dots { display: flex; gap: 7px; margin-top: 6px; }
+    .splash-dots span {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--accent2);
+      animation: bop 1.4s ease-in-out infinite; opacity: 0.4;
+    }
+    .splash-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .splash-dots span:nth-child(3) { animation-delay: 0.4s; }
+
     .drawer-overlay {
       position: absolute; inset: 0; z-index: 30;
       background: rgba(0,0,0,0.6);
@@ -313,6 +369,23 @@
       border-bottom-left-radius: 6px;
       backdrop-filter: blur(12px);
     }
+
+    /* RAG technique chip */
+    .rag-chip {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 11px;
+      background: rgba(45,212,191,0.08);
+      border: 1px solid rgba(45,212,191,0.2);
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: var(--teal);
+      letter-spacing: 0.02em;
+    }
+    .rag-chip span { font-size: 0.6rem; opacity: 0.7; }
 
     /* Audio player button */
     .play-btn {
@@ -569,22 +642,30 @@
     /* Bottom bar */
     .input-bottom {
       margin-top: 10px;
-      display: flex; align-items: center; justify-content: flex-end;
+      display: flex; align-items: center; justify-content: center;
     }
     .end-session-btn {
       display: flex; align-items: center; gap: 6px;
-      padding: 7px 15px;
-      background: transparent;
-      border: 1px solid var(--border2);
+      padding: 8px 18px;
+      background: rgba(244,114,182,0.06);
+      border: 1px solid rgba(244,114,182,0.18);
       border-radius: 999px;
-      color: var(--text3);
-      font-size: 0.73rem;
+      color: rgba(244,114,182,0.7);
+      font-size: 0.74rem;
       font-weight: 500;
       cursor: pointer;
       font-family: inherit;
-      transition: all 0.2s;
+      transition: all 0.22s;
+      letter-spacing: 0.01em;
     }
-    .end-session-btn:hover { border-color: rgba(244,114,182,0.4); color: var(--rose); }
+    .end-session-btn:hover {
+      background: rgba(244,114,182,0.12);
+      border-color: rgba(244,114,182,0.4);
+      color: var(--rose);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(244,114,182,0.15);
+    }
+    .end-session-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
   </style>
 </head>
 <body>
@@ -657,8 +738,8 @@
     <div class="bubble-row ai">
       <div class="av ai">🌿</div>
       <div class="bubble ai">
-        Hola, soy SereneAI. Estoy aquí para escucharte con calma y sin juicio.
-        Puedes <strong>hablar</strong> usando el micrófono o <strong>escribir</strong> lo que sientes.
+        Hola, soy SereneAI. Estoy aquí para escucharte con calma y sin juicio.<br><br>
+        Puedes <strong>hablar</strong> usando el micrófono o <strong>escribir</strong> lo que sientes — lo que sea más cómodo para ti.<br><br>
         ¿Cómo estás hoy?
       </div>
     </div>
@@ -690,6 +771,16 @@
     </div>
   </div>
 
+  <!-- Splash / warming up screen -->
+  <div class="splash" id="splash">
+    <div class="splash-logo">🌿</div>
+    <h2 class="splash-title">SereneAI</h2>
+    <p class="splash-sub" id="splashMsg">Preparando tu espacio seguro…</p>
+    <div class="splash-dots">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
   <!-- Input area -->
   <div class="input-area">
 
@@ -700,7 +791,7 @@
 
     <!-- Voice mode -->
     <div id="voiceWrap" class="voice-wrap">
-      <div class="voice-info" id="voiceHint">Mantén presionado el micrófono para hablar…</div>
+      <div class="voice-info" id="voiceHint">Mantén presionado para hablar…</div>
       <button class="mic-btn" id="micBtn">🎤</button>
     </div>
 
@@ -809,7 +900,8 @@
       mediaRecorder.start();
       isRecording = true;
       micBtn.classList.add("recording"); micBtn.textContent = "⏹";
-      voiceHint.textContent = "Escuchando…"; voiceHint.classList.add("active");
+      voiceHint.innerHTML = `<div class="wave-bars" style="margin-right:8px"><span></span><span></span><span></span><span></span><span></span></div>Escuchando…`;
+      voiceHint.classList.add("active");
     } catch {
       voiceHint.textContent = "No se pudo acceder al micrófono.";
     }
@@ -820,18 +912,18 @@
     isRecording = false;
     await new Promise(r => { mediaRecorder.onstop = r; mediaRecorder.stop(); mediaRecorder.stream.getTracks().forEach(t => t.stop()); });
     micBtn.classList.remove("recording"); micBtn.textContent = "🎤";
-    voiceHint.textContent = "Procesando…";
+    voiceHint.textContent = "Procesando audio…";
     const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || "audio/webm" });
     try {
       const fd = new FormData(); fd.append("audio", blob, "audio.webm");
       const r = await fetch(`${API_URL}/transcribe`, { method: "POST", body: fd });
       if (!r.ok) throw new Error();
       const { text } = await r.json();
-      if (!text.trim()) { voiceHint.textContent = "No escuché nada. Intenta de nuevo."; voiceHint.classList.remove("active"); return; }
-      voiceHint.textContent = "Mantén presionado para hablar…"; voiceHint.classList.remove("active");
+      if (!text.trim()) { voiceHint.innerHTML = "No escuché nada. Intenta de nuevo."; voiceHint.classList.remove("active"); return; }
+      voiceHint.innerHTML = "Mantén presionado el micrófono para hablar…"; voiceHint.classList.remove("active");
       await runPipeline(text);
     } catch {
-      voiceHint.textContent = "Error al transcribir."; voiceHint.classList.remove("active"); setStatus(false);
+      voiceHint.innerHTML = "Error al transcribir. Intenta de nuevo."; voiceHint.classList.remove("active"); setStatus(false);
     }
   }
 
@@ -848,7 +940,7 @@
         body: JSON.stringify({ messages: history, transcribed_text: text }),
       });
       if (!cr.ok) throw new Error();
-      const { response, es_crisis: crisis } = await cr.json();
+      const { response, es_crisis: crisis, tecnica_rag } = await cr.json();
       thinkEl.remove();
       history.push({ role: "assistant", content: response });
       if (crisis) crisisBanner.classList.add("visible");
@@ -864,7 +956,7 @@
         } catch {}
       }
 
-      addBubble("ai", esc(response), audioData);
+      addBubble("ai", esc(response), audioData, tecnica_rag);
       setStatus(true);
     } catch {
       thinkEl.remove();
@@ -881,8 +973,21 @@
       addBubble("ai", "Sesión finalizada. Gracias por confiar en mí. Cuídate mucho. 🌿");
       history = []; return;
     }
-    endBtn.disabled = true; endBtn.textContent = "Generando tarjeta…"; isBusy = true;
+    endBtn.disabled = true; endBtn.textContent = "Cerrando sesión…"; isBusy = true;
     try {
+      // 1. Resumen de sesión
+      endBtn.textContent = "Generando resumen…";
+      const sr = await fetch(`${API_URL}/session-summary`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: history }),
+      });
+      if (sr.ok) {
+        const { summary } = await sr.json();
+        addBubble("ai", `<em style="color:var(--text2);font-size:0.85rem">${esc(summary)}</em>`);
+      }
+
+      // 2. Frase de cierre para la tarjeta
+      endBtn.textContent = "Generando tarjeta…";
       const pr = await fetch(`${API_URL}/chat`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -891,6 +996,8 @@
         }),
       });
       const { response: phrase } = await pr.json();
+
+      // 3. Imagen motivacional
       const ir = await fetch(`${API_URL}/generate-card`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phrase }),
@@ -902,11 +1009,16 @@
         chat.scrollTop = chat.scrollHeight;
       }
     } catch (e) { console.error(e); }
+    history = [];
     isBusy = false; endBtn.disabled = false; endBtn.textContent = "✦ Finalizar sesión";
   };
 
   // Helpers
-  function addBubble(role, html, audio = null) {
+  function nowTime() {
+    return new Date().toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function addBubble(role, html, audio = null, tecnica = null) {
     const row = document.createElement("div");
     row.className = `bubble-row ${role}`;
 
@@ -925,26 +1037,36 @@
       btn.innerHTML = `<span class="play-icon">▶</span><div class="wave-bars paused"><span></span><span></span><span></span><span></span><span></span></div><span>Escuchar respuesta</span>`;
 
       const waves = btn.querySelector(".wave-bars");
-      btn.onclick = () => {
-        if (audioObj.paused) {
-          audioObj.play();
-          btn.querySelector(".play-icon").textContent = "⏸";
-          waves.classList.remove("paused");
-          btn.classList.add("playing");
-        } else {
-          audioObj.pause();
-          btn.querySelector(".play-icon").textContent = "▶";
-          waves.classList.add("paused");
-          btn.classList.remove("playing");
-        }
-        audioObj.onended = () => {
-          btn.querySelector(".play-icon").textContent = "▶";
-          waves.classList.add("paused");
-          btn.classList.remove("playing");
-        };
+      const setPlaying = (playing) => {
+        btn.querySelector(".play-icon").textContent = playing ? "⏸" : "▶";
+        playing ? waves.classList.remove("paused") : waves.classList.add("paused");
+        playing ? btn.classList.add("playing") : btn.classList.remove("playing");
       };
+      btn.onclick = () => {
+        if (audioObj.paused) { audioObj.play(); setPlaying(true); }
+        else { audioObj.pause(); setPlaying(false); }
+      };
+      audioObj.onended = () => setPlaying(false);
+
+      // Auto-play if toggle is on
+      if (cfg.audio && role === "ai") {
+        audioObj.play().then(() => setPlaying(true)).catch(() => {});
+      }
       bbl.appendChild(btn);
     }
+
+    if (tecnica && role === "ai") {
+      const chip = document.createElement("div");
+      chip.className = "rag-chip";
+      chip.innerHTML = `<span>✦</span> Técnica: ${tecnica}`;
+      bbl.appendChild(chip);
+    }
+
+    // Timestamp
+    const ts = document.createElement("span");
+    ts.className = "msg-time";
+    ts.textContent = nowTime();
+    bbl.appendChild(ts);
 
     if (role === "ai") { row.append(av, bbl); } else { row.append(bbl, av); }
     chat.appendChild(row);
@@ -975,8 +1097,36 @@
     return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");
   }
 
-  // Health check
-  fetch(`${API_URL}/health`).then(r => setStatus(r.ok)).catch(() => setStatus(false));
+  // Splash + health poller
+  const splash    = document.getElementById("splash");
+  const splashMsg = document.getElementById("splashMsg");
+
+  async function waitForBackend() {
+    let intentos = 0;
+    while (true) {
+      try {
+        const r = await fetch(`${API_URL}/health`);
+        if (r.ok) {
+          const data = await r.json();
+          if (data.embeddings_cached >= 53) {
+            setStatus(true);
+            splash.classList.add("hidden");
+            return;
+          }
+          splashMsg.textContent = "Cargando conocimiento de bienestar…";
+        } else {
+          splashMsg.textContent = "Conectando con el servidor…";
+        }
+      } catch {
+        splashMsg.textContent = "Buscando conexión…";
+        setStatus(false);
+      }
+      intentos++;
+      await new Promise(r => setTimeout(r, intentos < 3 ? 3000 : 10000));
+    }
+  }
+
+  waitForBackend();
 </script>
 </body>
 </html>
