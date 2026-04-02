@@ -1,21 +1,21 @@
 ================================================================================
-  SERENEAI — REPORTE DE PROGRESO
+  SERENEAI — PROGRESO OBTENIDO
   Hackathon OxBuild · Oxlo.ai · 2026
-  Última actualización: 1 abril 2026 — v7 (FINAL)
+  Última actualización: 2 abril 2026 — v8 ✅ COMPLETO
 ================================================================================
 
-ESTADO GENERAL: BACKEND ✅  FRONTEND ✅  DEPLOY ✅  README ✅  VIDEO ❌
-TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
+ESTADO GENERAL: BACKEND ✅  FRONTEND ✅  DEPLOY ✅  README ✅  VIDEO ✅
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ────────────────────────────────────────────────────────────────────────────────
-1. URLs DE PRODUCCIÓN
+1. URLS DE PRODUCCIÓN
 ────────────────────────────────────────────────────────────────────────────────
 
   Frontend (Vercel)  →  https://serene-ai-seven.vercel.app/
   Backend  (Railway) →  https://web-production-49c1e.up.railway.app/
   Swagger  (docs)    →  https://web-production-49c1e.up.railway.app/docs
   GitHub             →  https://github.com/ALFA117/SereneAI
+  Video demo         →  https://youtu.be/CDG0c7wVv3M?si=5rpsfiSD-2jbDSJf
 
   Cuentas registradas:
     Oxlo.ai    →  elopezbaeza705@gmail.com
@@ -23,95 +23,85 @@ TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
     Instagram  →  @ALFA_EDG_
 
 ────────────────────────────────────────────────────────────────────────────────
-2. APIS DE OXLO — ESTADO EN PRODUCCIÓN
+2. APIS DE OXLO — ESTADO EN PRODUCCIÓN ✅
 ────────────────────────────────────────────────────────────────────────────────
 
-  ✅ whisper-large-v3   → /transcribe          — probado con .m4a, .webm, .mp4
-  ✅ bge-large          → embeddings RAG        — 53 vectores 1024-dim verificados
+  ✅ whisper-large-v3   → /transcribe          — WebM / MP4 / OGG / AAC
+  ✅ bge-large          → embeddings RAG        — 53 vectores 1024-dim
   ✅ deepseek-r1-8b     → /chat + /summary      — RAG + crisis + strip <think>
-  ✅ kokoro-82m         → /synthesize           — WAV, voz af_heart
+  ✅ kokoro-82m         → /synthesize           — WAV, voz af_heart, 1 oración
   ✅ oxlo-image-pro     → /generate-card        — 1024x1024, b64_json
 
 ────────────────────────────────────────────────────────────────────────────────
-3. ENDPOINTS — ESTADO EN PRODUCCIÓN
+3. ENDPOINTS — ESTADO EN PRODUCCIÓN ✅
 ────────────────────────────────────────────────────────────────────────────────
 
   ✅ GET  /health                  KB=53, embeddings=53
   ✅ POST /generate-embeddings     Resumible, incremental, auto-start
   ✅ POST /transcribe              Whisper v3 — WebM/MP4/OGG/AAC
   ✅ POST /chat                    RAG + DeepSeek + detección de crisis
-  ✅ POST /synthesize              Kokoro WAV base64
+  ✅ POST /synthesize              Kokoro WAV base64 — 1 oración (rápido)
   ✅ POST /generate-card           Oxlo Image Pro 1024x1024
   ✅ POST /session-summary         DeepSeek — resumen cálido de sesión
 
 ────────────────────────────────────────────────────────────────────────────────
-4. FRONTEND — FEATURES IMPLEMENTADAS
+4. FRONTEND — FEATURES COMPLETAS ✅
 ────────────────────────────────────────────────────────────────────────────────
 
   Diseño
   ✅ Paleta cálida ámbar/sage — se siente como hablar con un amigo
-  ✅ Logo SereneIA.png circular en header, avatares, splash y favicon
-  ✅ Burbujas de IA con borde sage izquierdo — diferenciación visual clara
-  ✅ Fuente Inter — responsive — funciona en móvil sin configuración
-  ✅ Animación de fondo con hue-rotate suave en tonos cálidos
-  ✅ Botones mic/send en gradiente ámbar
+  ✅ Logo SereneIA.png circular en header, avatares de chat, splash y favicon
+  ✅ Burbujas de IA con borde sage izquierdo
+  ✅ Animación de fondo cálida con hue-rotate suave
+  ✅ Responsive — funciona en móvil y desktop
 
   Interacción
   ✅ Modo VOZ — mantener presionado, waveform animado mientras graba
-  ✅ Modo TEXTO — Enter para enviar
+  ✅ Modo TEXTO — Enter para enviar, auto-resize
   ✅ Detección automática de formato audio (WebM / MP4 / OGG / AAC)
-  ✅ Botón "▶ Escuchar" con barras de onda animadas
-  ✅ Auto-reproducción de voz ACTIVADA por defecto (toggle en settings)
-  ✅ Tarjeta motivacional activada por defecto (toggle en settings)
-  ✅ Tarjeta generada automáticamente después del primer intercambio
-  ✅ Banner de crisis con SAPTEL + Línea de la Vida + IMSS
-  ✅ Indicador de estado (en línea / sin conexión) con dot pulsante
-  ✅ Indicador "pensando…" animado
+  ✅ Voz auto-play ON por defecto — lee la primera oración
+  ✅ Botón ▶ para volver a escuchar cualquier respuesta
   ✅ Timestamps en cada burbuja
 
   RAG visible
-  ✅ Chip teal debajo de cada respuesta con nombre de la técnica usada
+  ✅ Chip sage debajo de cada respuesta con nombre de la técnica usada
 
   Sesión
-  ✅ Splash screen con polling /health hasta embeddings >= 53
-  ✅ Resumen de sesión antes de la tarjeta al finalizar
-  ✅ Historial se limpia al finalizar sesión
+  ✅ Splash screen (máx 10s) con progreso real "Cargando… (X/53 técnicas)"
+  ✅ Resumen de sesión al finalizar (texto cálido en burbuja)
+  ✅ Tarjeta motivacional en modal fullscreen con spinner de carga
+  ✅ Tarjeta generada automáticamente tras el primer intercambio
+  ✅ Descarga imagen simple (⬇ Imagen)
+  ✅ Descarga imagen con marca de agua — logo + SereneAI + @ALFA_EDG_ (📄 PDF)
+  ✅ Historial limpiado al finalizar sesión
 
-  Configuración (drawer)
+  Seguridad
+  ✅ Banner de crisis con SAPTEL + Línea de la Vida + IMSS
+  ✅ Detección de 25+ keywords de crisis — respuesta fija (no LLM)
+
+  Configuración (drawer ⚙)
   ✅ Toggle reproducción automática de voz
   ✅ Toggle tarjeta motivacional
   ✅ Lista de las 5 APIs de Oxlo usadas
   ✅ Link a Instagram @ALFA_EDG_
   ✅ Sección "Acerca de"
 
-  Producción
-  ✅ API_URL apunta a Railway
-  ✅ Auto-embeddings al arrancar si no hay caché (asyncio background task)
+  Ayuda (botón ?)
+  ✅ Modal con 6 secciones explicando todas las funciones
+  ✅ Cierra con ✕ o click fuera
 
 ────────────────────────────────────────────────────────────────────────────────
 5. RENDIMIENTO
 ────────────────────────────────────────────────────────────────────────────────
 
-  max_tokens: 200   (antes 400)  → generación ~50% más rápida
-  temperature: 0.65 (antes 0.7)  → respuestas más directas
-  System prompt: 50-120 palabras (antes 80-200) → menos tokens generados
-  TTS: solo primeras 2 oraciones → síntesis más rápida
-  Tarjeta: generación en background → no bloquea el chat
+  max_tokens: 200       → generación ~50% más rápida
+  temperature: 0.65     → respuestas más directas
+  TTS: 1 oración        → síntesis instantánea
+  Splash: máx 10s       → nunca bloquea al usuario
+  Tarjeta: background   → no bloquea el chat
 
 ────────────────────────────────────────────────────────────────────────────────
-6. LIMITACIONES CONOCIDAS
-────────────────────────────────────────────────────────────────────────────────
-
-  ⚠  Embeddings efímeros en Railway — se pierden al redesplegar.
-     Solución activa: auto-regeneración al arrancar (~2 min).
-     Antes de la demo hacer:
-       curl -X POST "https://web-production-49c1e.up.railway.app/generate-embeddings"
-
-  ⚠  Kokoro 82M es modelo inglés — TTS suena con acento en español.
-     Impacto: cosmético. No afecta funcionalidad ni criterios del jurado.
-
-────────────────────────────────────────────────────────────────────────────────
-7. CHECKLIST FINAL DEL HACKATHON
+6. CHECKLIST FINAL DEL HACKATHON ✅ COMPLETO
 ────────────────────────────────────────────────────────────────────────────────
 
   CÓDIGO
@@ -129,6 +119,9 @@ TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
   [✅] Logo propio circular en toda la UI
   [✅] Tarjeta automática desde primer mensaje
   [✅] Voz auto-play activada por defecto
+  [✅] Modal fullscreen para tarjeta
+  [✅] Descarga con marca de agua (logo + redes)
+  [✅] Botón de ayuda "?" con guía completa
 
   DEPLOY
   [✅] Backend Railway — en producción
@@ -139,9 +132,9 @@ TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
   ENTREGABLES
   [✅] README.md completo con todas las secciones
   [✅] Email de Oxlo.ai en el README
-  [ ] Capturas de pantalla en docs/
-  [ ] Video demo de 2 minutos
-  [ ] Enviado antes del 5 abr 23:59
+  [✅] Capturas de pantalla en docs/ (7 imágenes)
+  [✅] Video demo → https://youtu.be/CDG0c7wVv3M?si=5rpsfiSD-2jbDSJf
+  [ ] Enviado en DoraHacks antes del 5 abr 23:59
 
   CRITERIOS DEL JURADO
   [✅] Relevancia: salud mental en LATAM — caso real y urgente
@@ -149,23 +142,20 @@ TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
   [✅] Complejidad: RAG + TTS + imagen + transcripción + crisis + sesión
   [✅] Código limpio y documentado
   [✅] URL pública accesible
+  [✅] Video demo con flujo completo
 
 ────────────────────────────────────────────────────────────────────────────────
-8. GUIÓN DEL VIDEO DEMO (2 minutos)
+7. ÚNICO PASO PENDIENTE
 ────────────────────────────────────────────────────────────────────────────────
 
-  00:00  Abrir https://serene-ai-seven.vercel.app/ — mostrar splash + logo
-  00:10  Escribir "me siento muy ansioso hoy"
-         → respuesta empática + chip RAG + tarjeta automática
-  00:35  Cambiar a modo voz → hablar → ver transcripción automática
-  00:55  Escuchar respuesta en audio (auto-play activo)
-  01:15  Clic "Finalizar sesión" → resumen + nueva tarjeta
-  01:35  Abrir Swagger → mostrar los 7 endpoints
-  01:50  Abrir GitHub → mostrar estructura del repo
-  02:00  Fin
+  [ ] Enviar en DoraHacks antes del 5 abr 23:59
+        Cuenta: edgarlopezbaeza.ing@gmail.com
+        Repo:   https://github.com/ALFA117/SereneAI
+        Video:  https://youtu.be/CDG0c7wVv3M?si=5rpsfiSD-2jbDSJf
+        Demo:   https://serene-ai-seven.vercel.app/
 
 ================================================================================
-  RESUMEN DE ESTADO — 1 ABR 2026
-  Listo al 100%:  backend · frontend · deploy · README · logo · rendimiento
-  Falta urgente:  capturas de pantalla · video demo · envío en DoraHacks
+  RESUMEN FINAL — 2 ABR 2026
+  TODO COMPLETO excepto el envío formal en DoraHacks.
+  El proyecto está listo, desplegado, documentado y con video demo.
 ================================================================================

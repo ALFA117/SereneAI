@@ -15,6 +15,13 @@ Desarrollado para el hackathon **OxBuild · Oxlo.ai · 2026**.
 | **Backend API (Railway)** | https://web-production-49c1e.up.railway.app/ |
 | **Swagger / Docs** | https://web-production-49c1e.up.railway.app/docs |
 | **Repositorio** | https://github.com/ALFA117/SereneAI |
+| **Video demo** | https://youtu.be/CDG0c7wVv3M?si=5rpsfiSD-2jbDSJf |
+
+---
+
+## Video demo
+
+[![SereneAI Demo](https://img.youtube.com/vi/CDG0c7wVv3M/maxresdefault.jpg)](https://youtu.be/CDG0c7wVv3M?si=5rpsfiSD-2jbDSJf)
 
 ---
 
@@ -26,7 +33,7 @@ SereneAI permite a cualquier persona hablar libremente sobre cómo se siente y r
 - **Técnicas de bienestar validadas** recuperadas mediante búsqueda semántica (RAG)
 - **Respuestas empáticas** generadas por un LLM con instrucciones éticas estrictas
 - **Detección automática de crisis** con derivación a líneas de ayuda profesionales
-- **Tarjeta motivacional visual** al cerrar la sesión
+- **Tarjeta motivacional visual** al cerrar la sesión, descargable con marca de agua
 
 No reemplaza la terapia profesional: la complementa y facilita el acceso en el primer momento de necesidad.
 
@@ -41,6 +48,22 @@ No reemplaza la terapia profesional: la complementa y facilita el acceso en el p
 | Dimensiones por vector de embedding (BGE-Large) | **1 024** |
 | Keywords de detección de crisis | **25+** |
 | Tiempo de respuesta promedio | **~3–5 s** |
+
+---
+
+## Capturas de pantalla
+
+| Chat empático | Guía de uso | Ajustes y APIs |
+|:---:|:---:|:---:|
+| ![Chat](docs/screenshot-chat.png) | ![Ayuda](docs/screenshot-help.png) | ![Ajustes](docs/screenshot-settings.png) |
+
+| Chip RAG visible | Tarjeta motivacional | Resumen de sesión |
+|:---:|:---:|:---:|
+| ![RAG chip](docs/screenshot-rag-chip.png) | ![Tarjeta](docs/screenshot-card.png) | ![Resumen](docs/screenshot-summary.png) |
+
+| Descarga con marca de agua |
+|:---:|
+| ![Descarga](docs/screenshot-download.png) |
 
 ---
 
@@ -80,11 +103,11 @@ Usuario (navegador)
     └─ POST /session-summary ──► DeepSeek R1 8B ──► resumen de sesión
     │
     ▼
-Usuario (chip RAG visible · audio on-demand · tarjeta descargable)
+Usuario (chip RAG · audio auto-play · tarjeta descargable con marca)
 ```
 
 **RAG Pipeline:**
-1. Al arrancar el servidor, los embeddings se generan automáticamente en background si no hay caché
+1. Al arrancar el servidor, los embeddings se generan automáticamente en background
 2. Por cada mensaje: embed → coseno → top-3 técnicas → contexto inyectado al LLM
 3. El LLM nunca inventa técnicas: solo usa las recuperadas del knowledge base
 4. El nombre de la técnica principal se muestra como chip visible en el chat
@@ -139,13 +162,23 @@ SereneAI/
 │   ├── main.py                    # FastAPI — 7 endpoints + RAG pipeline
 │   ├── sereneai_system_prompt.py  # System prompt, crisis detection, limpieza R1
 │   ├── requirements.txt
-│   └── test_api.py                # Script de prueba rápida de la API key
+│   └── test_api.py
 ├── frontend/
-│   └── index.html                 # SPA: MediaRecorder + chat + splash + RAG chip
+│   ├── index.html                 # SPA: chat + voz + tarjeta + ayuda + ajustes
+│   └── logo.png                   # Logo SereneAI (circular en toda la UI)
 ├── data/
 │   ├── knowledge_base.json        # 53 técnicas clínicas validadas
 │   └── embeddings.json            # Generado en runtime (excluido de git)
 ├── docs/
+│   ├── screenshot-chat.png
+│   ├── screenshot-help.png
+│   ├── screenshot-settings.png
+│   ├── screenshot-rag-chip.png
+│   ├── screenshot-card.png
+│   ├── screenshot-summary.png
+│   └── screenshot-download.png
+├── logo/
+│   └── SereneIA.png
 ├── .env.example
 ├── .gitignore
 ├── Procfile
@@ -180,18 +213,6 @@ SereneAI/
 
 ---
 
-## Capturas de pantalla
-
-> _Próximamente en `docs/`_
-
----
-
-## Video demo
-
-> _Próximamente_
-
----
-
 ## Cuentas registradas
 
 | Plataforma | Email |
@@ -201,4 +222,4 @@ SereneAI/
 
 ---
 
-Hackathon OxBuild · Oxlo.ai · 2026
+Hackathon OxBuild · Oxlo.ai · 2026 · [@ALFA_EDG_](https://instagram.com/ALFA_EDG_)
