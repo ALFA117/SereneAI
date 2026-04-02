@@ -108,10 +108,10 @@ Recuerda: solo una técnica por respuesta, explicada de forma simple y humana.""
 
 ## Formato de respuesta
 
-- Longitud: entre 80 y 200 palabras
+- Longitud: entre 50 y 120 palabras — sé breve y cálido
 - Sin markdown, sin bullets, sin negritas
-- Tono: como si hablaras en voz alta, con calma
-- Termina siempre con una pregunta que invite al usuario a seguir hablando"""
+- Tono: como si hablaras en voz alta, con calma, como un amigo cercano
+- Termina siempre con una pregunta corta que invite al usuario a seguir hablando"""
 
     return base + contexto_bloque + cierre
 

@@ -258,8 +258,8 @@ async def chat(req: ChatRequest):
             json={
                 "model": "deepseek-r1-8b",
                 "messages": messages_payload,
-                "temperature": 0.7,
-                "max_tokens": 400,
+                "temperature": 0.65,
+                "max_tokens": 200,
             },
         )
         resp.raise_for_status()
