@@ -7,6 +7,17 @@ Desarrollado para el hackathon **OxBuild · Oxlo.ai · 2026**.
 
 ---
 
+## Demo en vivo
+
+| | |
+|---|---|
+| **Frontend (Vercel)** | https://serene-ai-seven.vercel.app/ |
+| **Backend API (Railway)** | https://web-production-49c1e.up.railway.app/ |
+| **Swagger / Docs** | https://web-production-49c1e.up.railway.app/docs |
+| **Repositorio** | https://github.com/ALFA117/SereneAI |
+
+---
+
 ## Caso de uso
 
 SereneAI permite a cualquier persona hablar libremente sobre cómo se siente y recibir:
@@ -14,22 +25,34 @@ SereneAI permite a cualquier persona hablar libremente sobre cómo se siente y r
 - **Apoyo emocional inmediato** por voz sintetizada
 - **Técnicas de bienestar validadas** recuperadas mediante búsqueda semántica (RAG)
 - **Respuestas empáticas** generadas por un LLM con instrucciones éticas estrictas
-- **Detección automática de crisis** con derivación a líneas profesionales
+- **Detección automática de crisis** con derivación a líneas de ayuda profesionales
 - **Tarjeta motivacional visual** al cerrar la sesión
 
 No reemplaza la terapia profesional: la complementa y facilita el acceso en el primer momento de necesidad.
 
 ---
 
+## Métricas del proyecto
+
+| | |
+|---|---|
+| Técnicas clínicas en la base de conocimiento | **53** |
+| APIs de Oxlo integradas en un solo flujo | **5** |
+| Dimensiones por vector de embedding (BGE-Large) | **1 024** |
+| Keywords de detección de crisis | **25+** |
+| Tiempo de respuesta promedio | **~3–5 s** |
+
+---
+
 ## Modelos de Oxlo utilizados
 
-| Modelo | Función | Por qué |
-|--------|---------|---------|
-| `whisper-large-v3` | Transcripción de voz → texto | Alta precisión con acentos latinoamericanos y ruido de fondo |
-| `bge-large` | Embeddings semánticos (1024 dims) | Búsqueda de técnicas clínicas por similitud de significado |
-| `deepseek-r1-8b` | Generación de respuestas empáticas | Calidad de razonamiento + instrucciones éticas controlables |
-| `kokoro-82m` | Síntesis de voz (TTS) | Voz natural en español, reduce fricción en momentos de angustia |
-| `oxlo-image-pro` | Generación de tarjeta motivacional | Cierre visual personalizado de la sesión |
+| Modelo | Función en SereneAI |
+|--------|---------------------|
+| `whisper-large-v3` | Transcripción de voz → texto (soporte WebM / MP4 / OGG) |
+| `bge-large` | Embeddings semánticos de 1 024 dimensiones para RAG |
+| `deepseek-r1-8b` | Generación de respuestas empáticas con instrucciones éticas |
+| `kokoro-82m` | Síntesis de voz natural (TTS) |
+| `oxlo-image-pro` | Generación de tarjeta motivacional 1 024×1 024 |
 
 ---
 
@@ -38,61 +61,60 @@ No reemplaza la terapia profesional: la complementa y facilita el acceso en el p
 ```
 Usuario (navegador)
     │
-    │  1. Audio WebM (MediaRecorder API)
+    │  1. Audio WebM/MP4/OGG  (MediaRecorder API)
     ▼
-[FastAPI Backend]
+[FastAPI Backend — Railway]
     │
-    ├─ POST /transcribe  ──► Oxlo Whisper Large v3  ──► texto
+    ├─ POST /transcribe    ──► Oxlo Whisper Large v3  ──► texto
     │
     ├─ POST /chat
-    │     ├─ Embed texto  ──► Oxlo BGE-Large  ──► vector 1024d
-    │     ├─ Cosine sim   ──► knowledge_base.json (50 técnicas)
+    │     ├─ Embed texto   ──► Oxlo BGE-Large  ──► vector 1024d
+    │     ├─ Cosine sim    ──► knowledge_base.json (53 técnicas)
     │     ├─ Top-3 técnicas → system prompt enriquecido
-    │     └─ LLM call     ──► Oxlo DeepSeek R1 8B  ──► respuesta
+    │     └─ LLM call      ──► Oxlo DeepSeek R1 8B  ──► respuesta
     │
-    ├─ POST /synthesize  ──► Oxlo Kokoro 82M  ──► audio MP3 base64
+    ├─ POST /synthesize    ──► Oxlo Kokoro 82M  ──► audio WAV base64
     │
-    └─ POST /generate-card ──► Oxlo Image Pro  ──► imagen 512x512
+    ├─ POST /generate-card ──► Oxlo Image Pro   ──► imagen 1024×1024
+    │
+    └─ POST /session-summary ──► DeepSeek R1 8B ──► resumen de sesión
     │
     ▼
-Usuario (audio autoplay + tarjeta descargable)
+Usuario (chip RAG visible · audio on-demand · tarjeta descargable)
 ```
 
 **RAG Pipeline:**
-1. Al arrancar el servidor, se generan embeddings para las 50 técnicas (`POST /generate-embeddings`)
-2. Por cada mensaje del usuario: embed → similitud coseno → top-3 técnicas → contexto al LLM
+1. Al arrancar el servidor, los embeddings se generan automáticamente en background si no hay caché
+2. Por cada mensaje: embed → coseno → top-3 técnicas → contexto inyectado al LLM
 3. El LLM nunca inventa técnicas: solo usa las recuperadas del knowledge base
+4. El nombre de la técnica principal se muestra como chip visible en el chat
 
 ---
 
-## Instalación
+## Instalación local
 
 ### Requisitos
 - Python 3.11+
-- API Key de Oxlo.ai (código promo: `OXBUILD` para acceso Premium)
+- API Key de Oxlo.ai
 
 ### Backend
 
 ```bash
-cd backend
+git clone https://github.com/ALFA117/SereneAI
+cd SereneAI/backend
 pip install -r requirements.txt
 cp ../.env.example ../.env
 # Editar .env con tu OXLO_API_KEY
 uvicorn main:app --reload --port 8000
 ```
 
-### Generar embeddings (primera vez)
-
-```bash
-curl -X POST http://localhost:8000/generate-embeddings
-```
+Los embeddings se generan automáticamente al arrancar el servidor.
 
 ### Frontend
 
-Abre `frontend/index.html` directamente en el navegador o sirve con:
+Abre `frontend/index.html` en el navegador o sirve con:
 
 ```bash
-# Con Python
 python -m http.server 5500 --directory frontend
 # Luego abre: http://localhost:5500
 ```
@@ -103,9 +125,9 @@ python -m http.server 5500 --directory frontend
 
 | Variable | Descripción |
 |----------|-------------|
-| `OXLO_API_KEY` | Tu API key de Oxlo.ai |
+| `OXLO_API_KEY` | API key de Oxlo.ai |
 | `OXLO_BASE_URL` | URL base de la API (default: `https://api.oxlo.ai/v1`) |
-| `CORS_ORIGINS` | Orígenes permitidos para CORS |
+| `CORS_ORIGINS` | Orígenes permitidos para CORS (separados por coma) |
 
 ---
 
@@ -114,16 +136,20 @@ python -m http.server 5500 --directory frontend
 ```
 SereneAI/
 ├── backend/
-│   ├── main.py              # FastAPI app con todos los endpoints
-│   └── requirements.txt
+│   ├── main.py                    # FastAPI — 7 endpoints + RAG pipeline
+│   ├── sereneai_system_prompt.py  # System prompt, crisis detection, limpieza R1
+│   ├── requirements.txt
+│   └── test_api.py                # Script de prueba rápida de la API key
 ├── frontend/
-│   └── index.html           # SPA con MediaRecorder + chat UI
+│   └── index.html                 # SPA: MediaRecorder + chat + splash + RAG chip
 ├── data/
-│   ├── knowledge_base.json  # 50 técnicas clínicas validadas
-│   └── embeddings.json      # Generado en runtime (no en git)
+│   ├── knowledge_base.json        # 53 técnicas clínicas validadas
+│   └── embeddings.json            # Generado en runtime (excluido de git)
 ├── docs/
 ├── .env.example
 ├── .gitignore
+├── Procfile
+├── railway.json
 └── README.md
 ```
 
@@ -133,40 +159,45 @@ SereneAI/
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| GET | `/health` | Estado del servidor y conteo de KB/embeddings |
-| POST | `/generate-embeddings` | Genera y cachea embeddings de las 50 técnicas |
-| POST | `/transcribe` | Transcribe audio (multipart/form-data) |
+| GET | `/health` | Estado: KB cargado + embeddings en caché |
+| POST | `/generate-embeddings` | Genera embeddings de las 53 técnicas (incremental) |
+| POST | `/transcribe` | Transcribe audio con Whisper Large v3 |
 | POST | `/chat` | Pipeline RAG completo: embed → retrieval → LLM |
-| POST | `/synthesize` | Convierte texto a audio MP3 (base64) |
-| POST | `/generate-card` | Genera imagen motivacional |
-
----
-
-## Capturas de pantalla
-
-> _Próximamente_
-
----
-
-## Demo
-
-> _Link a demo desplegada — próximamente_
+| POST | `/synthesize` | Convierte texto a audio WAV (base64) con Kokoro 82M |
+| POST | `/generate-card` | Genera imagen motivacional 1 024×1 024 con Image Pro |
+| POST | `/session-summary` | Resumen empático de la sesión con DeepSeek R1 |
 
 ---
 
 ## Seguridad y ética
 
 - El sistema **nunca hace diagnósticos clínicos** ni recomienda medicamentos
-- Detección automática de palabras clave de crisis con derivación a:
+- El system prompt incluye reglas explícitas contra minimizar el dolor del usuario
+- Detección automática de crisis con 25+ keywords — respuesta fija (no generada por LLM):
   - **SAPTEL México:** 55 5259-8121 (24 horas)
   - **Línea de la Vida:** 800 911-2000 (gratuita, 24 horas)
-- El knowledge base contiene **solo técnicas clínicas validadas** con nivel de evidencia documentado
+  - **IMSS Salud Mental:** 800 890-0024
 
 ---
 
-## Email registrado en Oxlo.ai
+## Capturas de pantalla
 
-> _[Tu email aquí]_
+> _Próximamente en `docs/`_
+
+---
+
+## Video demo
+
+> _Próximamente_
+
+---
+
+## Cuentas registradas
+
+| Plataforma | Email |
+|------------|-------|
+| **Oxlo.ai** | elopezbaeza705@gmail.com |
+| **DoraHacks** | edgarlopezbaeza.ing@gmail.com |
 
 ---
 
