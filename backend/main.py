@@ -283,22 +283,22 @@ async def synthesize(payload: dict):
     sentences = [s.strip() for s in text.replace("?", ".").split(".") if s.strip()]
     tts_text = ". ".join(sentences[:2]) + "."
 
+    # Try Spanish voices first, fall back to English
+    voices_to_try = ["es_1", "es_2", "af_heart"]
+    resp = None
     async with httpx.AsyncClient(timeout=60) as client:
-        resp = await client.post(
-            f"{OXLO_BASE_URL}/audio/speech",
-            headers=oxlo_headers(),
-            json={
-                "model": "kokoro-82m",
-                "input": tts_text,
-                "voice": "af_heart",
-            },
-        )
-        resp.raise_for_status()
-
-    # Validate we got actual audio, not a JSON error
-    content_type = resp.headers.get("content-type", "")
-    if "application/json" in content_type:
-        raise HTTPException(status_code=502, detail=f"Kokoro returned JSON instead of audio: {resp.text}")
+        for voice in voices_to_try:
+            r = await client.post(
+                f"{OXLO_BASE_URL}/audio/speech",
+                headers=oxlo_headers(),
+                json={"model": "kokoro-82m", "input": tts_text, "voice": voice},
+            )
+            content_type = r.headers.get("content-type", "")
+            if r.status_code == 200 and "application/json" not in content_type:
+                resp = r
+                break
+    if resp is None:
+        raise HTTPException(status_code=502, detail="No TTS voice available")
 
     # Detect actual format from magic bytes (RIFF = WAV, else assume mp3)
     fmt = "wav" if resp.content[:4] == b"RIFF" else "mp3"

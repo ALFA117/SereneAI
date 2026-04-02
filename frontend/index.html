@@ -636,6 +636,77 @@
     }
     .end-session-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
 
+    /* ── Help modal ── */
+    .modal-overlay {
+      position: absolute; inset: 0; z-index: 60;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: linear-gradient(160deg, #1e1a14 0%, #130f0a 100%);
+      border: 1px solid var(--border2);
+      border-radius: var(--r);
+      width: 100%; max-width: 440px;
+      max-height: 85dvh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      animation: modalIn 0.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .modal::-webkit-scrollbar { width: 3px; }
+    .modal::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+    .modal-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-logo {
+      width: 44px; height: 44px; border-radius: 50%; overflow: hidden;
+      border: 1.5px solid rgba(200,149,108,0.35);
+      box-shadow: 0 0 14px rgba(200,149,108,0.35);
+      flex-shrink: 0;
+    }
+    .modal-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .modal-title {
+      font-size: 1rem; font-weight: 700;
+      background: linear-gradient(90deg, #e8c9a8, #c8956c, #8bbaa8);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .modal-sub { font-size: 0.7rem; color: var(--text3); margin-top: 2px; }
+    .modal-close {
+      margin-left: auto; width: 30px; height: 30px;
+      background: var(--glass2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text2); font-size: 0.9rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.2s;
+    }
+    .modal-close:hover { color: var(--text); border-color: var(--border2); }
+    .modal-body { padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 18px; }
+    .help-section {
+      display: flex; gap: 14px; align-items: flex-start;
+      padding: 14px 16px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--r-sm);
+      transition: background 0.2s;
+    }
+    .help-section:hover { background: var(--glass2); }
+    .help-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 1px; }
+    .help-title { font-size: 0.87rem; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .help-desc { font-size: 0.78rem; color: var(--text2); line-height: 1.6; }
+
+    /* ── Card image loading ── */
+    .card-inner img { opacity: 0; transition: opacity 0.5s ease; }
+    .card-inner img.loaded { opacity: 1; }
+
     /* ── Splash screen ── */
     .splash {
       position: absolute; inset: 0; z-index: 50;
@@ -779,9 +850,68 @@
         <div class="dot"></div>
         <span id="statusLabel">En línea</span>
       </div>
+      <button class="hdr-btn" id="helpBtn" title="¿Cómo funciona?">?</button>
       <button class="hdr-btn" id="settingsBtn" title="Ajustes">⚙</button>
     </div>
   </header>
+
+  <!-- Help modal -->
+  <div class="modal-overlay" id="helpOverlay">
+    <div class="modal" id="helpModal">
+      <div class="modal-header">
+        <div class="modal-logo"><img src="logo.png" alt="SereneAI"></div>
+        <div>
+          <div class="modal-title">SereneAI</div>
+          <div class="modal-sub">Tu compañero de bienestar</div>
+        </div>
+        <button class="modal-close" id="helpClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="help-section">
+          <div class="help-icon">🎤</div>
+          <div>
+            <div class="help-title">Modo Voz</div>
+            <div class="help-desc">Mantén presionado el botón naranja del micrófono mientras hablas. Suéltalo cuando termines — SereneAI transcribe tu voz y responde.</div>
+          </div>
+        </div>
+        <div class="help-section">
+          <div class="help-icon">⌨</div>
+          <div>
+            <div class="help-title">Modo Texto</div>
+            <div class="help-desc">Cambia a la pestaña "Escribe" y teclea lo que sientes. Presiona Enter o el botón ➤ para enviar.</div>
+          </div>
+        </div>
+        <div class="help-section">
+          <div class="help-icon">🔊</div>
+          <div>
+            <div class="help-title">Voz de SereneAI</div>
+            <div class="help-desc">Las respuestas se leen en voz alta automáticamente. Usa el botón ▶ en cada mensaje para volver a escuchar. Puedes desactivarlo en ⚙ Ajustes.</div>
+          </div>
+        </div>
+        <div class="help-section">
+          <div class="help-icon">🖼</div>
+          <div>
+            <div class="help-title">Tarjeta motivacional</div>
+            <div class="help-desc">Después de tu primer mensaje, SereneAI genera una imagen de bienestar personalizada. Al finalizar la sesión se genera una nueva con un resumen de lo que trabajaste.</div>
+          </div>
+        </div>
+        <div class="help-section">
+          <div class="help-icon">✦</div>
+          <div>
+            <div class="help-title">Finalizar sesión</div>
+            <div class="help-desc">Cuando quieras cerrar, presiona "Finalizar sesión". SereneAI generará un resumen cálido de tu sesión y una tarjeta motivacional para llevarte.</div>
+          </div>
+        </div>
+        <div class="help-section">
+          <div class="help-icon">⚠</div>
+          <div>
+            <div class="help-title">Aviso importante</div>
+            <div class="help-desc">SereneAI es un compañero de apoyo emocional, no un terapeuta. Si estás en crisis, usa las líneas de ayuda que aparecerán automáticamente.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Chat area -->
   <div class="chat" id="chat">
@@ -889,6 +1019,9 @@
   const sendBtn      = document.getElementById("sendBtn");
   const toggleAudio  = document.getElementById("toggleAudio");
   const toggleCard   = document.getElementById("toggleCard");
+  const helpBtn      = document.getElementById("helpBtn");
+  const helpOverlay  = document.getElementById("helpOverlay");
+  const helpClose    = document.getElementById("helpClose");
 
   let mediaRecorder = null, audioChunks = [], isRecording = false, isBusy = false;
   let history = [];
@@ -902,6 +1035,10 @@
   settingsBtn.onclick = openDrawer;
   drawerClose.onclick = closeDrawer;
   drawerOverlay.onclick = closeDrawer;
+
+  helpBtn.onclick  = () => helpOverlay.classList.add("open");
+  helpClose.onclick = () => helpOverlay.classList.remove("open");
+  helpOverlay.addEventListener("click", e => { if (e.target === helpOverlay) helpOverlay.classList.remove("open"); });
 
   cardClose.onclick = () => cardSection.classList.remove("visible");
 
@@ -1022,28 +1159,34 @@
     isBusy = false; sendBtn.disabled = false;
   }
 
-  // Background card generation — never blocks chat
+  // Background card generation — uses AI response directly as phrase (no extra LLM call)
   async function generateCard(context) {
     try {
-      const pr = await fetch(`${API_URL}/chat`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [{ role: "assistant", content: context }],
-          transcribed_text: "frase inspiradora corta",
-        }),
-      });
-      if (!pr.ok) return;
-      const { response: phrase } = await pr.json();
+      // Extract a short phrase from the first sentence of the AI response
+      const phrase = context.replace(/<[^>]*>/g, "").split(/[.!?]/)[0].trim().slice(0, 80) || "Cada día es un nuevo comienzo";
       const ir = await fetch(`${API_URL}/generate-card`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phrase }),
       });
       if (!ir.ok) return;
       const { image_url } = await ir.json();
-      cardImg.src = image_url; cardDl.href = image_url;
-      cardSection.classList.add("visible");
-      chat.scrollTop = chat.scrollHeight;
+      if (!image_url) return;
+      showCard(image_url);
     } catch {}
+  }
+
+  function showCard(url) {
+    cardImg.classList.remove("loaded");
+    cardImg.onload = () => cardImg.classList.add("loaded");
+    cardImg.onerror = () => cardSection.classList.remove("visible");
+    cardImg.src = url;
+    // For download: if it's a data URL use it directly, else keep as link
+    cardDl.href = url;
+    if (url.startsWith("data:")) {
+      cardDl.download = "sereneai-card.png";
+    }
+    cardSection.classList.add("visible");
+    setTimeout(() => chat.scrollTop = chat.scrollHeight, 100);
   }
 
   // End session
@@ -1084,9 +1227,7 @@
       });
       if (ir.ok) {
         const { image_url } = await ir.json();
-        cardImg.src = image_url; cardDl.href = image_url;
-        cardSection.classList.add("visible");
-        chat.scrollTop = chat.scrollHeight;
+        if (image_url) showCard(image_url);
       }
     } catch (e) { console.error(e); }
     history = [];
@@ -1176,9 +1317,20 @@
     return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>");
   }
 
-  // Splash + health poller
+  // Splash + health poller — max 10 seconds, then open anyway
   const splash    = document.getElementById("splash");
   const splashMsg = document.getElementById("splashMsg");
+
+  function hideSplash() {
+    setStatus(true);
+    splash.classList.add("hidden");
+  }
+
+  // Force-open after 10 seconds regardless of backend state
+  const splashTimeout = setTimeout(() => {
+    splashMsg.textContent = "Listo — puede que algunas funciones carguen en segundos";
+    hideSplash();
+  }, 10000);
 
   async function waitForBackend() {
     let intentos = 0;
@@ -1188,11 +1340,13 @@
         if (r.ok) {
           const data = await r.json();
           if (data.embeddings_cached >= 53) {
-            setStatus(true);
-            splash.classList.add("hidden");
+            clearTimeout(splashTimeout);
+            hideSplash();
             return;
           }
-          splashMsg.textContent = "Cargando conocimiento de bienestar…";
+          splashMsg.textContent = intentos === 0
+            ? "Cargando conocimiento de bienestar…"
+            : `Cargando… (${data.embeddings_cached}/53 técnicas)`;
         } else {
           splashMsg.textContent = "Conectando con el servidor…";
         }
@@ -1201,7 +1355,7 @@
         setStatus(false);
       }
       intentos++;
-      await new Promise(r => setTimeout(r, intentos < 3 ? 3000 : 10000));
+      await new Promise(r => setTimeout(r, intentos < 5 ? 1500 : 5000));
     }
   }
 
