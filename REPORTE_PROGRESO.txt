@@ -1,10 +1,10 @@
 ================================================================================
   SERENEAI — REPORTE DE PROGRESO
   Hackathon OxBuild · Oxlo.ai · 2026
-  Última actualización: 1 abril 2026 — v6
+  Última actualización: 1 abril 2026 — v7 (FINAL)
 ================================================================================
 
-ESTADO GENERAL: BACKEND ✅  FRONTEND ✅  DEPLOY ✅  README ⚠️  VIDEO ❌
+ESTADO GENERAL: BACKEND ✅  FRONTEND ✅  DEPLOY ✅  README ✅  VIDEO ❌
 TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -17,245 +17,118 @@ TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
   Swagger  (docs)    →  https://web-production-49c1e.up.railway.app/docs
   GitHub             →  https://github.com/ALFA117/SereneAI
 
+  Cuentas registradas:
+    Oxlo.ai    →  elopezbaeza705@gmail.com
+    DoraHacks  →  edgarlopezbaeza.ing@gmail.com
+    Instagram  →  @ALFA_EDG_
+
 ────────────────────────────────────────────────────────────────────────────────
 2. APIS DE OXLO — ESTADO EN PRODUCCIÓN
 ────────────────────────────────────────────────────────────────────────────────
 
-  ✅ whisper-large-v3   → /transcribe         — probado con .m4a
-  ✅ bge-large          → embeddings RAG       — 53 vectores 1024-dim verificados
-  ✅ deepseek-r1-8b     → /chat               — RAG + crisis + strip <think>
-  ✅ kokoro-82m         → /synthesize         — WAV, voz af_heart
-  ✅ oxlo-image-pro     → /generate-card      — 1024x1024, b64_json
+  ✅ whisper-large-v3   → /transcribe          — probado con .m4a, .webm, .mp4
+  ✅ bge-large          → embeddings RAG        — 53 vectores 1024-dim verificados
+  ✅ deepseek-r1-8b     → /chat + /summary      — RAG + crisis + strip <think>
+  ✅ kokoro-82m         → /synthesize           — WAV, voz af_heart
+  ✅ oxlo-image-pro     → /generate-card        — 1024x1024, b64_json
 
 ────────────────────────────────────────────────────────────────────────────────
 3. ENDPOINTS — ESTADO EN PRODUCCIÓN
 ────────────────────────────────────────────────────────────────────────────────
 
-  ✅ GET  /health                KB=53, embeddings=53
-  ✅ POST /generate-embeddings   Resumible, incremental
-  ✅ POST /transcribe            Whisper v3
-  ✅ POST /chat                  RAG + DeepSeek + detección de crisis
-  ✅ POST /synthesize            Kokoro WAV
-  ✅ POST /generate-card         Oxlo Image Pro
+  ✅ GET  /health                  KB=53, embeddings=53
+  ✅ POST /generate-embeddings     Resumible, incremental, auto-start
+  ✅ POST /transcribe              Whisper v3 — WebM/MP4/OGG/AAC
+  ✅ POST /chat                    RAG + DeepSeek + detección de crisis
+  ✅ POST /synthesize              Kokoro WAV base64
+  ✅ POST /generate-card           Oxlo Image Pro 1024x1024
+  ✅ POST /session-summary         DeepSeek — resumen cálido de sesión
 
 ────────────────────────────────────────────────────────────────────────────────
 4. FRONTEND — FEATURES IMPLEMENTADAS
 ────────────────────────────────────────────────────────────────────────────────
 
   Diseño
-  ✅ UI premium con glassmorphism y gradientes animados
+  ✅ Paleta cálida ámbar/sage — se siente como hablar con un amigo
+  ✅ Logo SereneIA.png circular en header, avatares, splash y favicon
+  ✅ Burbujas de IA con borde sage izquierdo — diferenciación visual clara
   ✅ Fuente Inter — responsive — funciona en móvil sin configuración
-  ✅ Burbujas de chat con avatar para IA y usuario
-  ✅ Animaciones suaves en mensajes nuevos
+  ✅ Animación de fondo con hue-rotate suave en tonos cálidos
+  ✅ Botones mic/send en gradiente ámbar
 
   Interacción
-  ✅ Modo VOZ — mantener presionado para grabar
+  ✅ Modo VOZ — mantener presionado, waveform animado mientras graba
   ✅ Modo TEXTO — Enter para enviar
-  ✅ Detección automática de formato (WebM / MP4 / OGG)
+  ✅ Detección automática de formato audio (WebM / MP4 / OGG / AAC)
   ✅ Botón "▶ Escuchar" con barras de onda animadas
-  ✅ Toggle 🔊 reproducción automática (off por defecto)
-  ✅ Toggle 🖼 tarjeta motivacional (on por defecto)
+  ✅ Auto-reproducción de voz ACTIVADA por defecto (toggle en settings)
+  ✅ Tarjeta motivacional activada por defecto (toggle en settings)
+  ✅ Tarjeta generada automáticamente después del primer intercambio
   ✅ Banner de crisis con SAPTEL + Línea de la Vida + IMSS
-  ✅ Indicador de estado (en línea / sin conexión)
+  ✅ Indicador de estado (en línea / sin conexión) con dot pulsante
   ✅ Indicador "pensando…" animado
+  ✅ Timestamps en cada burbuja
+
+  RAG visible
+  ✅ Chip teal debajo de cada respuesta con nombre de la técnica usada
+
+  Sesión
+  ✅ Splash screen con polling /health hasta embeddings >= 53
+  ✅ Resumen de sesión antes de la tarjeta al finalizar
+  ✅ Historial se limpia al finalizar sesión
+
+  Configuración (drawer)
+  ✅ Toggle reproducción automática de voz
+  ✅ Toggle tarjeta motivacional
+  ✅ Lista de las 5 APIs de Oxlo usadas
+  ✅ Link a Instagram @ALFA_EDG_
+  ✅ Sección "Acerca de"
 
   Producción
   ✅ API_URL apunta a Railway
-  ✅ Auto-embeddings al arrancar si no hay caché
+  ✅ Auto-embeddings al arrancar si no hay caché (asyncio background task)
 
 ────────────────────────────────────────────────────────────────────────────────
-5. LIMITACIONES CONOCIDAS
+5. RENDIMIENTO
+────────────────────────────────────────────────────────────────────────────────
+
+  max_tokens: 200   (antes 400)  → generación ~50% más rápida
+  temperature: 0.65 (antes 0.7)  → respuestas más directas
+  System prompt: 50-120 palabras (antes 80-200) → menos tokens generados
+  TTS: solo primeras 2 oraciones → síntesis más rápida
+  Tarjeta: generación en background → no bloquea el chat
+
+────────────────────────────────────────────────────────────────────────────────
+6. LIMITACIONES CONOCIDAS
 ────────────────────────────────────────────────────────────────────────────────
 
   ⚠  Embeddings efímeros en Railway — se pierden al redesplegar.
      Solución activa: auto-regeneración al arrancar (~2 min).
-     Acción antes de enviar: hacer un curl al backend 2 min antes de la demo
-     para garantizar que los embeddings están calientes.
-
+     Antes de la demo hacer:
        curl -X POST "https://web-production-49c1e.up.railway.app/generate-embeddings"
 
-  ⚠  Kokoro 82M es modelo inglés — el TTS suena con acento en español.
+  ⚠  Kokoro 82M es modelo inglés — TTS suena con acento en español.
      Impacto: cosmético. No afecta funcionalidad ni criterios del jurado.
-     Mención sugerida en README: "Modelo TTS en inglés; versión en español
-     pendiente de disponibilidad en Oxlo."
 
 ────────────────────────────────────────────────────────────────────────────────
-6. MEJORAS OPCIONALES — ALTO IMPACTO, BAJO ESFUERZO
-────────────────────────────────────────────────────────────────────────────────
-
-  Estas mejoras toman menos de 30 minutos cada una y elevan
-  significativamente la percepción de complejidad ante el jurado.
-
-  ──────────────────────────────────────────────────────────────────────────
-  MEJORA A — Mostrar las técnicas recuperadas por RAG en el chat  [15 min]
-  ──────────────────────────────────────────────────────────────────────────
-  Qué hace: debajo de cada respuesta del companion, muestra un chip pequeño
-  con el nombre de la técnica que usó el RAG (ej. "Respiración 4-7-8").
-
-  Por qué importa al jurado: hace VISIBLE el RAG. Sin esto, el jurado no sabe
-  que el sistema está recuperando técnicas semánticamente. Con esto, lo ven.
-
-  Implementación en backend — añadir al response de /chat:
-    return {
-        "respuesta": respuesta_limpia,
-        "tecnica_principal": tecnicas_top[0]["nombre"],  # ← añadir esto
-        "es_crisis": False
-    }
-
-  Implementación en frontend — debajo de la burbuja de respuesta:
-    <div class="rag-chip">Técnica: Respiración 4-7-8</div>
-
-  ──────────────────────────────────────────────────────────────────────────
-  MEJORA B — Pantalla de bienvenida con "warming up"  [20 min]
-  ──────────────────────────────────────────────────────────────────────────
-  Qué hace: al cargar la app, muestra un mensaje elegante "Preparando tu
-  espacio seguro…" mientras el frontend hace un GET /health. Si
-  embeddings < 53, muestra "Cargando conocimiento de bienestar…" y reintenta
-  cada 10 segundos hasta que estén listos.
-
-  Por qué importa: elimina el escenario en que el jurado llega y el RAG
-  aún no está listo. La experiencia de onboarding también impresiona.
-
-  ──────────────────────────────────────────────────────────────────────────
-  MEJORA C — Resumen de sesión antes de la tarjeta motivacional  [20 min]
-  ──────────────────────────────────────────────────────────────────────────
-  Qué hace: al presionar "Finalizar sesión", antes de generar la imagen,
-  el LLM genera un resumen de 2-3 líneas de lo que se trabajó en la sesión.
-  Se muestra en pantalla junto a la tarjeta.
-
-  Ejemplo de output:
-    "Hoy hablamos sobre la ansiedad que sientes antes del trabajo.
-     Practicamos respiración 4-7-8 y exploramos cómo el movimiento
-     puede ayudarte a resetear. Fue una sesión valiente."
-
-  Por qué importa: hace la sesión más tangible, demuestra que el LLM
-  tiene memoria del historial, y hace el video demo más poderoso.
-
-  Prompt para añadir en sereneai_system_prompt.py:
-    PROMPT_RESUMEN_SESION = """Basándote en la conversación completa,
-    escribe un resumen cálido de 2-3 oraciones sobre lo que el usuario
-    exploró hoy. Usa segunda persona. Sin bullets. Máximo 60 palabras."""
-
-  ──────────────────────────────────────────────────────────────────────────
-  MEJORA D — Contador de sesión en el README  [5 min — sin código]
-  ──────────────────────────────────────────────────────────────────────────
-  Qué hace: en el README, añade una sección "Métricas del proyecto" con:
-    - 53 técnicas clínicas en la base de conocimiento
-    - 5 APIs de Oxlo integradas
-    - Embeddings de 1024 dimensiones por técnica
-    - Detección de crisis con 25+ keywords
-
-  Por qué importa: los números concretos hacen la complejidad visible
-  para un evaluador que lee el README sin abrir el código.
-
-────────────────────────────────────────────────────────────────────────────────
-7. PRÓXIMOS PASOS — EN ORDEN DE PRIORIDAD
-────────────────────────────────────────────────────────────────────────────────
-
-  HOY — 1 abr
-  ─────────────────────────────────────────────────────────────────────────
-  [ ] Verificar flujo completo en producción desde el celular:
-        1. Abrir https://serene-ai-seven.vercel.app/
-        2. Texto: "me siento muy ansioso" → ver respuesta empática
-        3. Voz: hablar → ver transcripción + respuesta
-        4. Activar 🔊 → clic "Escuchar respuesta"
-        5. "Finalizar sesión" → ver tarjeta motivacional
-  [ ] Implementar Mejora A (chip de técnica RAG) — 15 min
-  [ ] Implementar Mejora B (pantalla warming up) — 20 min
-
-  2 ABR
-  ─────────────────────────────────────────────────────────────────────────
-  [ ] Implementar Mejora C (resumen de sesión) — 20 min
-  [ ] Escribir README.md completo (ver sección 8)
-  [ ] Tomar capturas de pantalla y guardarlas en docs/
-
-  3 ABR
-  ─────────────────────────────────────────────────────────────────────────
-  [ ] Grabar video demo de 2 minutos con Loom o OBS (ver guión abajo)
-  [ ] Subir video y pegar URL en README
-  [ ] Hacer commit final y verificar que el repo es público
-
-  4-5 ABR
-  ─────────────────────────────────────────────────────────────────────────
-  [ ] Revisión final del README
-  [ ] Calentar embeddings: POST /generate-embeddings
-  [ ] Enviar antes del 5 abr 23:59
-
-────────────────────────────────────────────────────────────────────────────────
-8. README.md — ESTRUCTURA COMPLETA REQUERIDA
-────────────────────────────────────────────────────────────────────────────────
-
-  # SereneAI — Companion de salud mental con IA
-
-  ## Demo en vivo
-  [link Vercel] | [link video]
-
-  ## ¿Qué es SereneAI?
-  [descripción del caso de uso — 3-4 líneas]
-
-  ## Métricas del proyecto
-  - 5 APIs de Oxlo integradas en un solo flujo
-  - 53 técnicas clínicas en la base de conocimiento
-  - Embeddings de 1024 dimensiones (BGE-Large)
-  - Detección de crisis con 25+ keywords
-  - Tiempo de respuesta promedio: ~3-5 segundos
-
-  ## Modelos de Oxlo utilizados
-  | Modelo          | Uso en SereneAI                    |
-  |-----------------|-------------------------------------|
-  | whisper-large-v3| Transcripción de voz a texto        |
-  | bge-large       | Embeddings para búsqueda semántica  |
-  | deepseek-r1-8b  | Generación de respuesta empática    |
-  | kokoro-82m      | Síntesis de voz natural             |
-  | oxlo-image-pro  | Generación de tarjeta motivacional  |
-
-  ## Arquitectura
-  [diagrama o descripción del flujo: voz → Whisper → RAG → LLM → Kokoro → imagen]
-
-  ## Instalación local
-  git clone https://github.com/ALFA117/SereneAI
-  cd SereneAI/backend
-  pip install -r requirements.txt
-  cp .env.example .env   # añade tu OXLO_API_KEY
-  uvicorn main:app --reload
-
-  ## Email registrado en Oxlo.ai
-  [TU EMAIL AQUÍ — obligatorio para el hackathon]
-
-  ## Capturas de pantalla
-  [imágenes de docs/]
-
-────────────────────────────────────────────────────────────────────────────────
-9. GUIÓN DEL VIDEO DEMO (2 minutos)
-────────────────────────────────────────────────────────────────────────────────
-
-  00:00  Abrir https://serene-ai-seven.vercel.app/ — mostrar UI
-  00:10  Escribir "me siento muy ansioso hoy" → mostrar respuesta empática
-         (con chip de técnica RAG si implementas Mejora A)
-  00:35  Cambiar a modo voz → hablar → mostrar transcripción automática
-  00:55  Activar toggle 🔊 → reproducir respuesta en audio
-  01:15  Clic "Finalizar sesión" → mostrar resumen + tarjeta motivacional
-  01:35  Abrir https://web-production-49c1e.up.railway.app/docs
-         → mostrar los 5 endpoints en Swagger
-  01:50  Abrir https://github.com/ALFA117/SereneAI → mostrar estructura del repo
-  02:00  Fin
-
-────────────────────────────────────────────────────────────────────────────────
-10. CHECKLIST FINAL DEL HACKATHON
+7. CHECKLIST FINAL DEL HACKATHON
 ────────────────────────────────────────────────────────────────────────────────
 
   CÓDIGO
   [✅] Repositorio GitHub público
-  [✅] Estructura limpia (backend / frontend / data / docs)
+  [✅] Estructura limpia (backend / frontend / data / docs / logo)
   [✅] 53 técnicas clínicas en knowledge base
   [✅] RAG con BGE-Large + cosine similarity
   [✅] System prompt empático con reglas éticas
   [✅] Detección de crisis + líneas de ayuda LATAM
   [✅] Limpieza de respuesta DeepSeek R1
-  [✅] Soporte audio móvil (WebM/MP4/OGG)
-  [ ] Chip de técnica RAG visible en el chat         (Mejora A)
-  [ ] Pantalla de warming up con estado real         (Mejora B)
-  [ ] Resumen de sesión antes de tarjeta             (Mejora C)
+  [✅] Soporte audio móvil (WebM/MP4/OGG/AAC)
+  [✅] Chip de técnica RAG visible en el chat
+  [✅] Pantalla de warming up con estado real
+  [✅] Resumen de sesión antes de tarjeta
+  [✅] Logo propio circular en toda la UI
+  [✅] Tarjeta automática desde primer mensaje
+  [✅] Voz auto-play activada por defecto
 
   DEPLOY
   [✅] Backend Railway — en producción
@@ -264,8 +137,8 @@ TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
   [✅] CORS abierto
 
   ENTREGABLES
-  [ ] README.md completo con todas las secciones
-  [ ] Email de Oxlo.ai en el README                  ← OBLIGATORIO
+  [✅] README.md completo con todas las secciones
+  [✅] Email de Oxlo.ai en el README
   [ ] Capturas de pantalla en docs/
   [ ] Video demo de 2 minutos
   [ ] Enviado antes del 5 abr 23:59
@@ -273,13 +146,26 @@ TIEMPO RESTANTE: 4 días — deadline 5 abr 23:59
   CRITERIOS DEL JURADO
   [✅] Relevancia: salud mental en LATAM — caso real y urgente
   [✅] 5 APIs de Oxlo en un solo flujo coherente
-  [✅] Complejidad: RAG + TTS + imagen + transcripción + crisis
+  [✅] Complejidad: RAG + TTS + imagen + transcripción + crisis + sesión
   [✅] Código limpio y documentado
   [✅] URL pública accesible
 
+────────────────────────────────────────────────────────────────────────────────
+8. GUIÓN DEL VIDEO DEMO (2 minutos)
+────────────────────────────────────────────────────────────────────────────────
+
+  00:00  Abrir https://serene-ai-seven.vercel.app/ — mostrar splash + logo
+  00:10  Escribir "me siento muy ansioso hoy"
+         → respuesta empática + chip RAG + tarjeta automática
+  00:35  Cambiar a modo voz → hablar → ver transcripción automática
+  00:55  Escuchar respuesta en audio (auto-play activo)
+  01:15  Clic "Finalizar sesión" → resumen + nueva tarjeta
+  01:35  Abrir Swagger → mostrar los 7 endpoints
+  01:50  Abrir GitHub → mostrar estructura del repo
+  02:00  Fin
+
 ================================================================================
-  RESUMEN DE ESTADO
-  Lo que funciona al 100%:  backend · frontend · deploy · 5 APIs
-  Lo que falta (urgente):   README con email · video demo · envío
-  Lo que suma puntos extra: Mejoras A, B y C (1 hora total de trabajo)
+  RESUMEN DE ESTADO — 1 ABR 2026
+  Listo al 100%:  backend · frontend · deploy · README · logo · rendimiento
+  Falta urgente:  capturas de pantalla · video demo · envío en DoraHacks
 ================================================================================

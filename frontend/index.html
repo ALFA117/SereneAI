@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>SereneAI — Tu espacio de calma</title>
+  <link rel="icon" type="image/png" href="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -111,14 +112,14 @@
     }
 
     .logo {
-      width: 40px; height: 40px;
-      background: linear-gradient(135deg, #c8956c 0%, #d4a87d 50%, #8bbaa8 100%);
-      border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 19px;
-      box-shadow: 0 0 18px rgba(200,149,108,0.4), 0 4px 10px rgba(0,0,0,0.4);
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      overflow: hidden;
       flex-shrink: 0;
+      box-shadow: 0 0 18px rgba(200,149,108,0.45), 0 4px 10px rgba(0,0,0,0.4);
+      border: 1.5px solid rgba(200,149,108,0.3);
     }
+    .logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .header-info { flex: 1; }
     .header-info h1 {
@@ -338,9 +339,13 @@
       flex-shrink: 0;
     }
     .av.ai {
-      background: linear-gradient(135deg, #c8956c, #8bbaa8);
+      background: transparent;
       box-shadow: 0 2px 8px rgba(200,149,108,0.35);
+      overflow: hidden;
+      border: 1px solid rgba(200,149,108,0.25);
+      border-radius: 50%;
     }
+    .av.ai img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .av.user { background: var(--glass3); border: 1px solid var(--border2); }
 
     .bubble {
@@ -645,10 +650,14 @@
     }
     .splash.hidden { opacity: 0; transform: scale(0.96); pointer-events: none; }
     .splash-logo {
-      font-size: 3.5rem;
-      filter: drop-shadow(0 0 24px rgba(200,149,108,0.6));
+      width: 90px; height: 90px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 2px solid rgba(200,149,108,0.4);
+      box-shadow: 0 0 40px rgba(200,149,108,0.5), 0 0 80px rgba(139,186,168,0.2);
       animation: splashFloat 3s ease-in-out infinite;
     }
+    .splash-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
     @keyframes splashFloat {
       0%, 100% { transform: translateY(0); }
       50%       { transform: translateY(-8px); }
@@ -688,7 +697,7 @@
           <div class="si-desc">Escucha la voz de SereneAI automáticamente</div>
         </div>
         <label class="pill-toggle">
-          <input type="checkbox" id="toggleAudio">
+          <input type="checkbox" id="toggleAudio" checked>
           <div class="pill-track"></div>
           <div class="pill-thumb"></div>
         </label>
@@ -760,7 +769,7 @@
 
   <!-- Header -->
   <header>
-    <div class="logo">🌿</div>
+    <div class="logo"><img src="logo.png" alt="SereneAI"></div>
     <div class="header-info">
       <h1>SereneAI</h1>
       <p>Tu espacio de calma · Aquí para escucharte</p>
@@ -778,7 +787,7 @@
   <div class="chat" id="chat">
     <div class="day-divider">Hoy</div>
     <div class="bubble-row ai">
-      <div class="av ai">🌿</div>
+      <div class="av ai"><img src="logo.png" alt="SereneAI"></div>
       <div class="bubble ai">
         Hola, soy SereneAI. Estoy aquí para escucharte con calma y sin juicio.<br><br>
         Puedes <strong>hablar</strong> con el micrófono o <strong>escribir</strong> lo que sientes — lo que sea más cómodo para ti.<br><br>
@@ -815,7 +824,7 @@
 
   <!-- Splash / warming up screen -->
   <div class="splash" id="splash">
-    <div class="splash-logo">🌿</div>
+    <div class="splash-logo"><img src="logo.png" alt="SereneAI"></div>
     <h2 class="splash-title">SereneAI</h2>
     <p class="splash-sub" id="splashMsg">Preparando tu espacio seguro…</p>
     <div class="splash-dots">
@@ -854,7 +863,7 @@
 <script>
   const API_URL = "https://web-production-49c1e.up.railway.app";
 
-  const cfg = { audio: false, card: true };
+  const cfg = { audio: true, card: true };
 
   // DOM
   const chat         = document.getElementById("chat");
@@ -1000,12 +1009,41 @@
 
       addBubble("ai", esc(response), audioData, tecnica_rag);
       setStatus(true);
+
+      // Auto-generate motivational card after first exchange if enabled
+      if (cfg.card && history.length === 2) {
+        generateCard(response);
+      }
     } catch {
       thinkEl.remove();
       addBubble("ai", "Hubo un error de conexión. Intenta de nuevo.");
       setStatus(false);
     }
     isBusy = false; sendBtn.disabled = false;
+  }
+
+  // Background card generation — never blocks chat
+  async function generateCard(context) {
+    try {
+      const pr = await fetch(`${API_URL}/chat`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [{ role: "assistant", content: context }],
+          transcribed_text: "frase inspiradora corta",
+        }),
+      });
+      if (!pr.ok) return;
+      const { response: phrase } = await pr.json();
+      const ir = await fetch(`${API_URL}/generate-card`, {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phrase }),
+      });
+      if (!ir.ok) return;
+      const { image_url } = await ir.json();
+      cardImg.src = image_url; cardDl.href = image_url;
+      cardSection.classList.add("visible");
+      chat.scrollTop = chat.scrollHeight;
+    } catch {}
   }
 
   // End session
@@ -1066,7 +1104,8 @@
 
     const av = document.createElement("div");
     av.className = `av ${role}`;
-    av.textContent = role === "ai" ? "🌿" : "🧑";
+    if (role === "ai") { av.innerHTML = '<img src="logo.png" alt="SereneAI">'; }
+    else { av.textContent = "🧑"; }
 
     const bbl = document.createElement("div");
     bbl.className = `bubble ${role}`;
@@ -1118,7 +1157,7 @@
     const row = document.createElement("div");
     row.className = "thinking-row";
     const av = document.createElement("div");
-    av.className = "av ai"; av.textContent = "🌿";
+    av.className = "av ai"; av.innerHTML = '<img src="logo.png" alt="SereneAI">';
     const bbl = document.createElement("div");
     bbl.className = "thinking-bubble";
     bbl.innerHTML = "<span></span><span></span><span></span>";
