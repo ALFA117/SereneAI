@@ -475,41 +475,68 @@
     .crisis-banner.visible { display: block; }
     .crisis-banner strong { color: var(--danger); }
 
-    /* ── Card section ── */
-    .card-section {
-      display: none;
-      padding: 14px 18px;
-      flex-shrink: 0;
-      animation: msgIn 0.4s ease;
+    /* ── Card modal fullscreen ── */
+    .card-modal {
+      position: absolute; inset: 0; z-index: 55;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(8px);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s ease;
     }
-    .card-section.visible { display: block; }
-    .card-inner {
+    .card-modal.visible { opacity: 1; pointer-events: all; }
+    .card-modal-inner {
+      width: 100%; max-width: 420px;
+      background: linear-gradient(160deg, #1e1a14 0%, #130f0a 100%);
+      border: 1px solid var(--border2);
       border-radius: var(--r);
       overflow: hidden;
-      border: 1px solid var(--border2);
-      background: var(--glass);
-      backdrop-filter: blur(12px);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7);
+      animation: modalIn 0.35s cubic-bezier(0.4,0,0.2,1);
     }
-    .card-inner img {
+    .card-modal-img {
       width: 100%; display: block;
-      max-height: 200px; object-fit: cover;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      opacity: 0; transition: opacity 0.4s ease;
     }
-    .card-footer {
-      padding: 12px 16px;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 8px;
+    .card-modal-img.loaded { opacity: 1; }
+    .card-modal-placeholder {
+      width: 100%; aspect-ratio: 1/1;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(200,149,108,0.1), rgba(139,186,168,0.08));
     }
-    .card-footer p { font-size: 0.78rem; color: var(--text2); }
-    .card-actions { display: flex; gap: 8px; }
+    .card-modal-loading {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+    }
+    .card-modal-loading .splash-dots { margin: 0; }
+    .card-modal-loading p { font-size: 0.78rem; color: var(--text3); }
+    .card-modal-footer {
+      padding: 16px 18px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .card-modal-phrase {
+      font-size: 0.82rem; color: var(--text2);
+      font-style: italic; line-height: 1.5;
+      text-align: center;
+    }
+    .card-modal-actions {
+      display: flex; gap: 8px;
+    }
     .cbtn {
-      padding: 7px 16px;
-      border-radius: 999px;
-      font-size: 0.75rem; font-weight: 600;
+      flex: 1; padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 0.78rem; font-weight: 600;
       cursor: pointer; border: none;
-      transition: all 0.18s;
+      transition: all 0.18s; font-family: inherit;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .cbtn.primary { background: var(--amber); color: white; box-shadow: 0 2px 10px rgba(200,149,108,0.35); }
     .cbtn.primary:hover { background: var(--amber2); transform: translateY(-1px); }
+    .cbtn.sage { background: rgba(139,186,168,0.15); color: var(--sage); border: 1px solid rgba(139,186,168,0.25); }
+    .cbtn.sage:hover { background: rgba(139,186,168,0.25); }
     .cbtn.ghost { background: var(--glass2); color: var(--text2); border: 1px solid var(--border); }
     .cbtn.ghost:hover { color: var(--text); }
 
@@ -936,17 +963,22 @@
     No estás solo/a. Hay personas capacitadas esperando ayudarte.
   </div>
 
-  <!-- Motivational card -->
-  <div class="card-section" id="cardSection">
-    <div class="card-inner">
-      <img id="cardImg" src="" alt="Tarjeta motivacional">
-      <div class="card-footer">
-        <p>Tu tarjeta de esta sesión</p>
-        <div class="card-actions">
-          <button class="cbtn ghost" id="cardClose">Cerrar</button>
-          <a id="cardDl" href="#" download="sereneai.png">
-            <button class="cbtn primary">⬇ Guardar</button>
-          </a>
+  <!-- Motivational card modal -->
+  <div class="card-modal" id="cardModal">
+    <div class="card-modal-inner">
+      <div class="card-modal-placeholder" id="cardPlaceholder">
+        <div class="card-modal-loading">
+          <div class="splash-dots"><span></span><span></span><span></span></div>
+          <p>Generando tu tarjeta…</p>
+        </div>
+      </div>
+      <img class="card-modal-img" id="cardImg" src="" alt="Tarjeta motivacional" style="display:none">
+      <div class="card-modal-footer">
+        <div class="card-modal-phrase" id="cardPhrase"></div>
+        <div class="card-modal-actions">
+          <button class="cbtn ghost" id="cardClose">✕ Cerrar</button>
+          <button class="cbtn sage" id="cardSavePdf">📄 PDF</button>
+          <button class="cbtn primary" id="cardSaveImg">⬇ Imagen</button>
         </div>
       </div>
     </div>
@@ -991,6 +1023,23 @@
 </div>
 
 <script>
+  // Polyfill roundRect for older browsers
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r) {
+      this.beginPath();
+      this.moveTo(x + r, y);
+      this.lineTo(x + w - r, y);
+      this.quadraticCurveTo(x + w, y, x + w, y + r);
+      this.lineTo(x + w, y + h - r);
+      this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      this.lineTo(x + r, y + h);
+      this.quadraticCurveTo(x, y + h, x, y + h - r);
+      this.lineTo(x, y + r);
+      this.quadraticCurveTo(x, y, x + r, y);
+      this.closePath();
+    };
+  }
+
   const API_URL = "https://web-production-49c1e.up.railway.app";
 
   const cfg = { audio: true, card: true };
@@ -1000,11 +1049,15 @@
   const micBtn       = document.getElementById("micBtn");
   const voiceHint    = document.getElementById("voiceHint");
   const crisisBanner = document.getElementById("crisisBanner");
-  const cardSection  = document.getElementById("cardSection");
+  const cardModal    = document.getElementById("cardModal");
   const cardImg      = document.getElementById("cardImg");
-  const cardDl       = document.getElementById("cardDl");
+  const cardPlaceholder = document.getElementById("cardPlaceholder");
+  const cardPhrase   = document.getElementById("cardPhrase");
   const cardClose    = document.getElementById("cardClose");
+  const cardSavePdf  = document.getElementById("cardSavePdf");
+  const cardSaveImg  = document.getElementById("cardSaveImg");
   const endBtn       = document.getElementById("endBtn");
+  let   currentCardPhrase = "";
   const statusChip   = document.getElementById("statusChip");
   const statusLabel  = document.getElementById("statusLabel");
   const settingsBtn  = document.getElementById("settingsBtn");
@@ -1040,7 +1093,14 @@
   helpClose.onclick = () => helpOverlay.classList.remove("open");
   helpOverlay.addEventListener("click", e => { if (e.target === helpOverlay) helpOverlay.classList.remove("open"); });
 
-  cardClose.onclick = () => cardSection.classList.remove("visible");
+  cardClose.onclick = () => {
+    cardModal.classList.remove("visible");
+    // Reset for next time
+    cardImg.style.display = "none"; cardImg.classList.remove("loaded");
+    cardPlaceholder.style.display = "flex";
+  };
+  cardSaveImg.onclick = downloadCardImg;
+  cardSavePdf.onclick = downloadCardPdf;
 
   // Tabs
   tabVoice.onclick = () => {
@@ -1161,32 +1221,148 @@
 
   // Background card generation — uses AI response directly as phrase (no extra LLM call)
   async function generateCard(context) {
+    // Show modal with loading spinner immediately
+    cardPhrase.textContent = "";
+    cardModal.classList.add("visible");
+    cardPlaceholder.style.display = "flex";
+    cardImg.style.display = "none";
+    cardImg.classList.remove("loaded");
     try {
-      // Extract a short phrase from the first sentence of the AI response
       const phrase = context.replace(/<[^>]*>/g, "").split(/[.!?]/)[0].trim().slice(0, 80) || "Cada día es un nuevo comienzo";
       const ir = await fetch(`${API_URL}/generate-card`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phrase }),
       });
-      if (!ir.ok) return;
+      if (!ir.ok) { cardModal.classList.remove("visible"); return; }
       const { image_url } = await ir.json();
-      if (!image_url) return;
-      showCard(image_url);
-    } catch {}
+      if (!image_url) { cardModal.classList.remove("visible"); return; }
+      showCard(image_url, phrase);
+    } catch { cardModal.classList.remove("visible"); }
   }
 
-  function showCard(url) {
+  function showCard(url, phrase) {
+    currentCardPhrase = phrase || "";
+    cardPhrase.textContent = phrase ? `"${phrase}"` : "";
+    // Show modal with loading state first
+    cardModal.classList.add("visible");
+    cardPlaceholder.style.display = "flex";
+    cardImg.style.display = "none";
     cardImg.classList.remove("loaded");
-    cardImg.onload = () => cardImg.classList.add("loaded");
-    cardImg.onerror = () => cardSection.classList.remove("visible");
-    cardImg.src = url;
-    // For download: if it's a data URL use it directly, else keep as link
-    cardDl.href = url;
-    if (url.startsWith("data:")) {
-      cardDl.download = "sereneai-card.png";
+
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      cardImg.src = url;
+      cardImg.style.display = "block";
+      cardImg.classList.add("loaded");
+      cardPlaceholder.style.display = "none";
+    };
+    img.onerror = () => {
+      cardPlaceholder.innerHTML = `<div class="card-modal-loading"><p style="color:var(--text3)">No se pudo cargar la imagen.</p></div>`;
+    };
+    img.src = url;
+  }
+
+  function downloadCardImg() {
+    const url = cardImg.src;
+    if (!url) return;
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sereneai-card.png";
+    a.click();
+  }
+
+  function downloadCardPdf() {
+    const url = cardImg.src;
+    if (!url) return;
+    // Build PDF-like image via canvas with watermark
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const W = 1080, H = 1350;
+      const canvas = document.createElement("canvas");
+      canvas.width = W; canvas.height = H;
+      const ctx = canvas.getContext("2d");
+
+      // Background
+      ctx.fillStyle = "#0f0d0a";
+      ctx.fillRect(0, 0, W, H);
+
+      // Card image centered
+      const imgSize = 1000;
+      const imgX = (W - imgSize) / 2;
+      const imgY = 60;
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(imgX, imgY, imgSize, imgSize, 32);
+      ctx.clip();
+      ctx.drawImage(img, imgX, imgY, imgSize, imgSize);
+      ctx.restore();
+
+      // Phrase
+      if (currentCardPhrase) {
+        ctx.fillStyle = "#e8c9a8";
+        ctx.font = "italic 36px 'Inter', serif";
+        ctx.textAlign = "center";
+        const maxW = W - 100;
+        wrapText(ctx, `"${currentCardPhrase}"`, W / 2, imgY + imgSize + 70, maxW, 48);
+      }
+
+      // Watermark bar at bottom
+      ctx.fillStyle = "rgba(200,149,108,0.12)";
+      ctx.fillRect(0, H - 120, W, 120);
+
+      // Logo circle
+      const logoImg = new Image();
+      logoImg.onload = () => {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(60, H - 60, 38, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(logoImg, 22, H - 98, 76, 76);
+        ctx.restore();
+
+        // Brand text
+        ctx.fillStyle = "#c8956c";
+        ctx.font = "bold 32px 'Inter', sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("SereneAI", 114, H - 72);
+        ctx.fillStyle = "#5c5048";
+        ctx.font = "24px 'Inter', sans-serif";
+        ctx.fillText("Tu espacio de calma  ·  @ALFA_EDG_", 114, H - 38);
+
+        // Download
+        canvas.toBlob(blob => {
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "sereneai-sesion.png";
+          a.click();
+        }, "image/png");
+      };
+      logoImg.onerror = () => {
+        canvas.toBlob(blob => {
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "sereneai-sesion.png";
+          a.click();
+        }, "image/png");
+      };
+      logoImg.src = "logo.png";
+    };
+    img.src = url;
+  }
+
+  function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(" ");
+    let line = "";
+    for (const word of words) {
+      const test = line ? line + " " + word : word;
+      if (ctx.measureText(test).width > maxWidth && line) {
+        ctx.fillText(line, x, y);
+        line = word; y += lineHeight;
+      } else { line = test; }
     }
-    cardSection.classList.add("visible");
-    setTimeout(() => chat.scrollTop = chat.scrollHeight, 100);
+    ctx.fillText(line, x, y);
   }
 
   // End session
@@ -1209,7 +1385,11 @@
         addBubble("ai", `<em style="color:var(--text2);font-size:0.85rem">${esc(summary)}</em>`);
       }
 
-      // 2. Frase de cierre para la tarjeta
+      // 2. Frase de cierre para la tarjeta — show loading modal
+      cardPhrase.textContent = "";
+      cardModal.classList.add("visible");
+      cardPlaceholder.style.display = "flex";
+      cardImg.style.display = "none"; cardImg.classList.remove("loaded");
       endBtn.textContent = "Generando tarjeta…";
       const pr = await fetch(`${API_URL}/chat`, {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -1227,7 +1407,7 @@
       });
       if (ir.ok) {
         const { image_url } = await ir.json();
-        if (image_url) showCard(image_url);
+        if (image_url) showCard(image_url, phrase);
       }
     } catch (e) { console.error(e); }
     history = [];
