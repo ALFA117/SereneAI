@@ -327,17 +327,22 @@ async def synthesize(payload: dict):
         if not unicodedata.combining(c)
     )
 
-    async with httpx.AsyncClient(timeout=60) as client:
-        resp = await client.post(
-            f"{OXLO_BASE_URL}/audio/speech",
-            headers=oxlo_headers(),
-            json={"model": "kokoro-82m", "input": tts_text, "voice": "af_sky"},
-        )
-        resp.raise_for_status()
+    try:
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(
+                f"{OXLO_BASE_URL}/audio/speech",
+                headers=oxlo_headers(),
+                json={"model": "kokoro-82m", "input": tts_text, "voice": "af_sky"},
+            )
+            resp.raise_for_status()
+    except httpx.HTTPStatusError as e:
+        raise HTTPException(status_code=e.response.status_code, detail=f"TTS unavailable ({e.response.status_code})")
+    except Exception:
+        raise HTTPException(status_code=503, detail="TTS unavailable")
 
     content_type = resp.headers.get("content-type", "")
     if "application/json" in content_type:
-        raise HTTPException(status_code=502, detail=f"TTS error: {resp.text}")
+        raise HTTPException(status_code=502, detail="TTS error: unexpected JSON")
 
     # Detect actual format from magic bytes (RIFF = WAV, else assume mp3)
     fmt = "wav" if resp.content[:4] == b"RIFF" else "mp3"
@@ -357,15 +362,18 @@ async def session_summary(payload: dict):
         messages_payload.append({"role": msg["role"], "content": msg["content"]})
     messages_payload.append({"role": "user", "content": "Genera el resumen de esta sesión."})
 
-    async with httpx.AsyncClient(timeout=60) as client:
-        resp = await client.post(
-            f"{OXLO_BASE_URL}/chat/completions",
-            headers=oxlo_headers(),
-            json={"model": "deepseek-r1-8b", "messages": messages_payload, "temperature": 0.6, "max_tokens": 150},
-        )
-        resp.raise_for_status()
+    try:
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(
+                f"{OXLO_BASE_URL}/chat/completions",
+                headers=oxlo_headers(),
+                json={"model": "deepseek-r1-8b", "messages": messages_payload, "temperature": 0.6, "max_tokens": 150},
+            )
+            resp.raise_for_status()
+        raw = resp.json()["choices"][0]["message"]["content"]
+    except Exception:
+        raise HTTPException(status_code=503, detail="Summary unavailable")
 
-    raw = resp.json()["choices"][0]["message"]["content"]
     return {"summary": limpiar_respuesta(raw)}
 
 
@@ -378,19 +386,22 @@ async def generate_card(payload: dict):
 
     image_prompt = build_image_prompt(phrase)
 
-    async with httpx.AsyncClient(timeout=120) as client:
-        resp = await client.post(
-            f"{OXLO_BASE_URL}/images/generations",
-            headers=oxlo_headers(),
-            json={
-                "model": "oxlo-image-pro",
-                "prompt": image_prompt,
-                "size": "1024x1024",
-            },
-        )
-        resp.raise_for_status()
+    try:
+        async with httpx.AsyncClient(timeout=120) as client:
+            resp = await client.post(
+                f"{OXLO_BASE_URL}/images/generations",
+                headers=oxlo_headers(),
+                json={
+                    "model": "oxlo-image-pro",
+                    "prompt": image_prompt,
+                    "size": "1024x1024",
+                },
+            )
+            resp.raise_for_status()
+        item = resp.json()["data"][0]
+    except Exception:
+        raise HTTPException(status_code=503, detail="Image generation unavailable")
 
-    item = resp.json()["data"][0]
     b64 = item.get("b64_json")
     url = item.get("url")
     image_src = f"data:image/png;base64,{b64}" if b64 else url
