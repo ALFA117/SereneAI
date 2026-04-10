@@ -254,7 +254,7 @@ async def chat(req: ChatRequest):
     for msg in req.messages:
         messages_payload.append({"role": msg.role, "content": msg.content})
 
-    # 5. Call LLM — handle 429 rate limit and 5xx with retry
+    # 5. Call LLM — retry up to 3 times with backoff for 429 / 5xx
     raw = None
     for attempt in range(3):
         try:
@@ -274,28 +274,25 @@ async def chat(req: ChatRequest):
             break
         except httpx.HTTPStatusError as e:
             status = e.response.status_code
-            if status == 429:
+            if status == 429 and attempt < 2:
+                # Rate limited — wait and retry (per-minute limit, not daily)
                 try:
-                    retry_after = int(e.response.json().get("retry_after", 8))
+                    retry_after = int(e.response.json().get("retry_after", 12))
                 except Exception:
-                    retry_after = 8
-                if retry_after > 90:
-                    raise HTTPException(status_code=429, detail="rate_limit_daily")
-                if attempt < 2:
-                    await asyncio.sleep(min(retry_after + 1, 30))
-                    continue
-                raise HTTPException(status_code=429, detail="rate_limit")
-            if attempt < 2 and status >= 500:
-                await asyncio.sleep(4)
+                    retry_after = 12
+                await asyncio.sleep(min(retry_after + 2, 20))
                 continue
-            raise HTTPException(status_code=502, detail=f"LLM error {status}")
+            if status >= 500 and attempt < 2:
+                await asyncio.sleep(5)
+                continue
+            raise HTTPException(status_code=503, detail="rate_limit")
         except (httpx.TimeoutException, httpx.ConnectError):
             if attempt < 2:
-                await asyncio.sleep(4)
+                await asyncio.sleep(5)
                 continue
             raise HTTPException(status_code=504, detail="LLM timeout")
     if raw is None:
-        raise HTTPException(status_code=502, detail="LLM no respondió")
+        raise HTTPException(status_code=503, detail="LLM no respondió")
 
     # 6. Strip <think>...</think> blocks from DeepSeek R1
     clean = limpiar_respuesta(raw)
