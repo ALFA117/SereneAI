@@ -233,15 +233,18 @@ async def chat(req: ChatRequest):
     if detectar_crisis(user_text):
         return {**MENSAJE_CRISIS, "response": MENSAJE_CRISIS["texto"]}
 
-    # 2. RAG retrieval
+    # 2. RAG retrieval — skip gracefully if embedding API fails
     tecnicas_contexto = None
     tecnica_principal = None
     if embeddings_cache:
-        query_vec = await get_embedding(user_text)
-        top_tecnicas = retrieve_top_k(query_vec, k=3)
-        tecnicas_contexto = format_tecnicas(top_tecnicas)
-        if top_tecnicas:
-            tecnica_principal = top_tecnicas[0]["nombre"]
+        try:
+            query_vec = await get_embedding(user_text)
+            top_tecnicas = retrieve_top_k(query_vec, k=3)
+            tecnicas_contexto = format_tecnicas(top_tecnicas)
+            if top_tecnicas:
+                tecnica_principal = top_tecnicas[0]["nombre"]
+        except Exception:
+            pass  # RAG unavailable — proceed without context
 
     # 3. Build system prompt with RAG context
     system_prompt = build_system_prompt(tecnicas_contexto=tecnicas_contexto)
