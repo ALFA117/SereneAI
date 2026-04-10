@@ -286,9 +286,16 @@ async def synthesize(payload: dict):
     if len(tts_text) > 220:
         tts_text = tts_text[:220]
 
-    # Strip Spanish inverted punctuation (¿ ¡) — Kokoro is an English TTS
-    # and these characters cause the audio to cut off mid-sentence
+    # Kokoro is English TTS — normalize Spanish text for cleaner phonation
+    import unicodedata
     tts_text = tts_text.replace("¿", "").replace("¡", "")
+    tts_text = tts_text.replace("—", ",").replace("–", ",")
+    tts_text = tts_text.replace("ñ", "ny").replace("Ñ", "NY")
+    # Strip combining accent marks (á→a, é→e, etc.)
+    tts_text = ''.join(
+        c for c in unicodedata.normalize('NFKD', tts_text)
+        if not unicodedata.combining(c)
+    )
 
     async with httpx.AsyncClient(timeout=60) as client:
         resp = await client.post(
