@@ -807,7 +807,7 @@
       <div class="setting-item">
         <div class="si-text">
           <div class="si-label">🖼 Tarjeta motivacional</div>
-          <div class="si-desc">Genera una imagen al finalizar la sesión</div>
+          <div class="si-desc">Genera imágenes desde tu primer mensaje</div>
         </div>
         <label class="pill-toggle">
           <input type="checkbox" id="toggleCard" checked>
@@ -1150,6 +1150,8 @@
       micBtn.classList.add("recording"); micBtn.textContent = "⏹";
       voiceHint.innerHTML = `<div class="wave-bars" style="margin-right:8px"><span></span><span></span><span></span><span></span><span></span></div>Escuchando…`;
       voiceHint.classList.add("active");
+      // Wake up Railway in background while the user is talking
+      fetch(`${API_URL}/health`).catch(() => {});
     } catch {
       voiceHint.textContent = "No se pudo acceder al micrófono.";
     }
@@ -1162,16 +1164,35 @@
     micBtn.classList.remove("recording"); micBtn.textContent = "🎤";
     voiceHint.textContent = "Procesando audio…";
     const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || "audio/webm" });
-    try {
-      const fd = new FormData(); fd.append("audio", blob, "audio.webm");
-      const r = await fetch(`${API_URL}/transcribe`, { method: "POST", body: fd });
-      if (!r.ok) throw new Error();
-      const { text } = await r.json();
-      if (!text.trim()) { voiceHint.innerHTML = "No escuché nada. Intenta de nuevo."; voiceHint.classList.remove("active"); return; }
-      voiceHint.innerHTML = "Mantén presionado para hablar…"; voiceHint.classList.remove("active");
-      await runPipeline(text);
-    } catch {
-      voiceHint.innerHTML = "Error al transcribir. Intenta de nuevo."; voiceHint.classList.remove("active"); setStatus(false);
+
+    // Retry transcription up to 2 times (handles Railway cold start)
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const fd = new FormData();
+        fd.append("audio", blob, "audio.webm");
+        const r = await fetch(`${API_URL}/transcribe`, { method: "POST", body: fd });
+        if (!r.ok) throw new Error(`${r.status}`);
+        const { text } = await r.json();
+        if (!text.trim()) {
+          voiceHint.innerHTML = "No escuché nada. Intenta de nuevo.";
+          voiceHint.classList.remove("active");
+          return;
+        }
+        voiceHint.innerHTML = "Mantén presionado para hablar…";
+        voiceHint.classList.remove("active");
+        await runPipeline(text);
+        return; // success — exit loop
+      } catch {
+        if (attempt === 1) {
+          // First failure: wait and retry silently
+          voiceHint.textContent = "Reconectando con el servidor…";
+          await new Promise(r => setTimeout(r, 3000));
+        } else {
+          // Second failure: show error but don't mark app as offline
+          voiceHint.innerHTML = "No se pudo procesar. Intenta de nuevo.";
+          voiceHint.classList.remove("active");
+        }
+      }
     }
   }
 
