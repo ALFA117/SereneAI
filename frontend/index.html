@@ -1205,38 +1205,54 @@
     history.push({ role: "user", content: text });
     const thinkEl = showThinking();
 
-    try {
-      const cr = await fetch(`${API_URL}/chat`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: history, transcribed_text: text }),
-      });
-      if (!cr.ok) throw new Error();
-      const { response, es_crisis: crisis, tecnica_rag } = await cr.json();
-      thinkEl.remove();
-      history.push({ role: "assistant", content: response });
-      if (crisis) crisisBanner.classList.add("visible");
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const cr = await fetch(`${API_URL}/chat`, {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: history, transcribed_text: text }),
+        });
+        if (!cr.ok) {
+          // Retry once on server errors (Oxlo overloaded, cold start)
+          if (attempt === 1 && cr.status >= 500) {
+            await new Promise(r => setTimeout(r, 4000));
+            continue;
+          }
+          throw new Error(`${cr.status}`);
+        }
+        const { response, es_crisis: crisis, tecnica_rag } = await cr.json();
+        thinkEl.remove();
+        history.push({ role: "assistant", content: response });
+        if (crisis) crisisBanner.classList.add("visible");
 
-      let audioData = null;
-      if (cfg.audio) {
-        try {
-          const tr = await fetch(`${API_URL}/synthesize`, {
-            method: "POST", headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ text: response }),
-          });
-          if (tr.ok) { const d = await tr.json(); audioData = { data: d.audio_base64, fmt: d.format || "mp3" }; }
-        } catch {}
+        let audioData = null;
+        if (cfg.audio) {
+          try {
+            const tr = await fetch(`${API_URL}/synthesize`, {
+              method: "POST", headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ text: response }),
+            });
+            if (tr.ok) { const d = await tr.json(); audioData = { data: d.audio_base64, fmt: d.format || "mp3" }; }
+          } catch {}
+        }
+
+        addBubble("ai", esc(response), audioData, tecnica_rag);
+        setStatus(true);
+
+        // Auto-generate motivational card after first exchange if enabled
+        if (cfg.card && history.length === 2) {
+          generateCard(response);
+        }
+        isBusy = false; sendBtn.disabled = false;
+        return;
+      } catch {
+        if (attempt === 1) {
+          // First failure: wait and retry silently
+          await new Promise(r => setTimeout(r, 4000));
+        } else {
+          thinkEl.remove();
+          addBubble("ai", "Hubo un error de conexión. Intenta de nuevo.");
+        }
       }
-
-      addBubble("ai", esc(response), audioData, tecnica_rag);
-      setStatus(true);
-
-      // Auto-generate motivational card after first exchange if enabled
-      if (cfg.card && history.length === 2) {
-        generateCard(response);
-      }
-    } catch {
-      thinkEl.remove();
-      addBubble("ai", "Hubo un error de conexión. Intenta de nuevo.");
     }
     isBusy = false; sendBtn.disabled = false;
   }
@@ -1541,7 +1557,8 @@
         const r = await fetch(`${API_URL}/health`);
         if (r.ok) {
           const data = await r.json();
-          if (data.embeddings_cached >= 53) {
+          // Open as soon as KB is loaded — chat works without embeddings (no RAG)
+          if (data.kb_loaded >= 53) {
             clearTimeout(splashTimeout);
             hideSplash();
             return;

@@ -251,21 +251,36 @@ async def chat(req: ChatRequest):
     for msg in req.messages:
         messages_payload.append({"role": msg.role, "content": msg.content})
 
-    # 5. Call LLM
-    async with httpx.AsyncClient(timeout=60) as client:
-        resp = await client.post(
-            f"{OXLO_BASE_URL}/chat/completions",
-            headers=oxlo_headers(),
-            json={
-                "model": "deepseek-r1-8b",
-                "messages": messages_payload,
-                "temperature": 0.65,
-                "max_tokens": 200,
-            },
-        )
-        resp.raise_for_status()
-
-    raw = resp.json()["choices"][0]["message"]["content"]
+    # 5. Call LLM — retry once on 5xx / timeout
+    raw = None
+    for attempt in range(2):
+        try:
+            async with httpx.AsyncClient(timeout=60) as client:
+                resp = await client.post(
+                    f"{OXLO_BASE_URL}/chat/completions",
+                    headers=oxlo_headers(),
+                    json={
+                        "model": "deepseek-r1-8b",
+                        "messages": messages_payload,
+                        "temperature": 0.65,
+                        "max_tokens": 200,
+                    },
+                )
+                resp.raise_for_status()
+            raw = resp.json()["choices"][0]["message"]["content"]
+            break
+        except httpx.HTTPStatusError as e:
+            if attempt == 0 and e.response.status_code >= 500:
+                await asyncio.sleep(3)
+                continue
+            raise HTTPException(status_code=502, detail=f"LLM error {e.response.status_code}")
+        except (httpx.TimeoutException, httpx.ConnectError):
+            if attempt == 0:
+                await asyncio.sleep(3)
+                continue
+            raise HTTPException(status_code=504, detail="LLM timeout")
+    if raw is None:
+        raise HTTPException(status_code=502, detail="LLM no respondió")
 
     # 6. Strip <think>...</think> blocks from DeepSeek R1
     clean = limpiar_respuesta(raw)
