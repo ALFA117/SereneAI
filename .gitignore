@@ -21,8 +21,9 @@ node_modules/
 .next/
 dist/
 
-# Data generated at runtime
-data/embeddings.json
+# Data generated at runtime — embeddings.json is committed to avoid
+# regenerating 53 API calls on every Railway deploy (causes rate limits)
+# data/embeddings.json
 
 # IDE
 .vscode/
