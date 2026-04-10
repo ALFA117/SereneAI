@@ -280,17 +280,21 @@ async def synthesize(payload: dict):
     if not text:
         raise HTTPException(status_code=400, detail="text is required")
 
-    # Split on sentence-ending punctuation (., !, ?) — avoids bug with leading ¿
+    # Extract first sentence — split after . ! ? followed by space
     parts = re.split(r'(?<=[.!?])\s+', text.strip())
     tts_text = parts[0].strip() if parts and parts[0].strip() else text[:200]
     if len(tts_text) > 220:
         tts_text = tts_text[:220]
 
+    # Strip Spanish inverted punctuation (¿ ¡) — Kokoro is an English TTS
+    # and these characters cause the audio to cut off mid-sentence
+    tts_text = tts_text.replace("¿", "").replace("¡", "")
+
     async with httpx.AsyncClient(timeout=60) as client:
         resp = await client.post(
             f"{OXLO_BASE_URL}/audio/speech",
             headers=oxlo_headers(),
-            json={"model": "kokoro-82m", "input": tts_text, "voice": "af_heart"},
+            json={"model": "kokoro-82m", "input": tts_text, "voice": "af_sky"},
         )
         resp.raise_for_status()
 
