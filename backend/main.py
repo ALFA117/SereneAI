@@ -254,9 +254,9 @@ async def chat(req: ChatRequest):
     for msg in req.messages:
         messages_payload.append({"role": msg.role, "content": msg.content})
 
-    # 5. Call LLM — retry once on 5xx / timeout
+    # 5. Call LLM — handle 429 rate limit and 5xx with retry
     raw = None
-    for attempt in range(2):
+    for attempt in range(3):
         try:
             async with httpx.AsyncClient(timeout=60) as client:
                 resp = await client.post(
@@ -273,13 +273,25 @@ async def chat(req: ChatRequest):
             raw = resp.json()["choices"][0]["message"]["content"]
             break
         except httpx.HTTPStatusError as e:
-            if attempt == 0 and e.response.status_code >= 500:
-                await asyncio.sleep(3)
+            status = e.response.status_code
+            if status == 429:
+                try:
+                    retry_after = int(e.response.json().get("retry_after", 8))
+                except Exception:
+                    retry_after = 8
+                if retry_after > 90:
+                    raise HTTPException(status_code=429, detail="rate_limit_daily")
+                if attempt < 2:
+                    await asyncio.sleep(min(retry_after + 1, 30))
+                    continue
+                raise HTTPException(status_code=429, detail="rate_limit")
+            if attempt < 2 and status >= 500:
+                await asyncio.sleep(4)
                 continue
-            raise HTTPException(status_code=502, detail=f"LLM error {e.response.status_code}")
+            raise HTTPException(status_code=502, detail=f"LLM error {status}")
         except (httpx.TimeoutException, httpx.ConnectError):
-            if attempt == 0:
-                await asyncio.sleep(3)
+            if attempt < 2:
+                await asyncio.sleep(4)
                 continue
             raise HTTPException(status_code=504, detail="LLM timeout")
     if raw is None:

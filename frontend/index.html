@@ -1211,9 +1211,18 @@
           body: JSON.stringify({ messages: history, transcribed_text: text }),
         });
         if (!cr.ok) {
-          // Retry once on server errors (Oxlo overloaded, cold start)
-          if (attempt === 1 && cr.status >= 500) {
-            await new Promise(r => setTimeout(r, 4000));
+          const errBody = await cr.json().catch(() => ({}));
+          const detail = errBody.detail || "";
+          // Rate limit daily — no point retrying
+          if (cr.status === 429 && detail === "rate_limit_daily") {
+            thinkEl.remove();
+            addBubble("ai", "Se alcanzó el límite diario de uso de SereneAI. Por favor, regresa mañana o contacta al administrador.");
+            isBusy = false; sendBtn.disabled = false;
+            return;
+          }
+          // Short rate limit or 5xx — retry with wait
+          if (attempt === 1 && (cr.status === 429 || cr.status >= 500)) {
+            await new Promise(r => setTimeout(r, 5000));
             continue;
           }
           throw new Error(`${cr.status}`);
@@ -1243,13 +1252,13 @@
         }
         isBusy = false; sendBtn.disabled = false;
         return;
-      } catch {
+      } catch (err) {
         if (attempt === 1) {
           // First failure: wait and retry silently
-          await new Promise(r => setTimeout(r, 4000));
+          await new Promise(r => setTimeout(r, 5000));
         } else {
           thinkEl.remove();
-          addBubble("ai", "Hubo un error de conexión. Intenta de nuevo.");
+          addBubble("ai", "El servidor tardó demasiado en responder. Intenta de nuevo en unos segundos.");
         }
       }
     }
