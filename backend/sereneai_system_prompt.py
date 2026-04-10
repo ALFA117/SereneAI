@@ -17,6 +17,10 @@ CRISIS_KEYWORDS = [
     "no quiero vivir", "no vale la pena vivir", "quitarme la vida",
     "acabar con todo", "hacerme daño", "hacerme algo",
     "suicidio", "suicidarme", "matarme", "me voy a matar",
+    "ganas de morir", "con ganas de morir", "deseos de morir",
+    "deseo de morir", "pienso en morir", "pienso en quitarme",
+    "ya no quiero estar aquí", "ya no quiero existir", "dejar de existir",
+    "no quiero seguir viviendo", "no quiero seguir aquí",
     # Autolesión
     "cortarme", "lastimarme", "autolesión", "me corto",
     # Desesperanza severa
