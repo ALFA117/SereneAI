@@ -274,18 +274,24 @@ async def chat(req: ChatRequest):
             break
         except httpx.HTTPStatusError as e:
             status = e.response.status_code
-            if status == 429 and attempt < 2:
-                # Rate limited — wait and retry (per-minute limit, not daily)
+            if status == 429:
                 try:
-                    retry_after = int(e.response.json().get("retry_after", 12))
+                    body = e.response.json()
+                    retry_after = int(body.get("retry_after", 12))
                 except Exception:
                     retry_after = 12
-                await asyncio.sleep(min(retry_after + 2, 20))
-                continue
+                # Daily limit: retry_after > 1 hour — fail immediately
+                if retry_after > 3600:
+                    raise HTTPException(status_code=429, detail="daily_limit")
+                # Per-minute limit — wait and retry
+                if attempt < 2:
+                    await asyncio.sleep(min(retry_after + 2, 20))
+                    continue
+                raise HTTPException(status_code=429, detail="rate_limit")
             if status >= 500 and attempt < 2:
                 await asyncio.sleep(5)
                 continue
-            raise HTTPException(status_code=503, detail="rate_limit")
+            raise HTTPException(status_code=503, detail=f"LLM error {status}")
         except (httpx.TimeoutException, httpx.ConnectError):
             if attempt < 2:
                 await asyncio.sleep(5)

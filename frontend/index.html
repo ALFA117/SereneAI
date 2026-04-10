@@ -1205,8 +1205,14 @@
           body: JSON.stringify({ messages: history, transcribed_text: text }),
         });
         if (!cr.ok) {
-          // Retry on rate limit or server errors
-          if (attempt === 1 && (cr.status === 429 || cr.status === 503 || cr.status >= 500)) {
+          const errBody = await cr.json().catch(() => ({}));
+          if (cr.status === 429 && errBody.detail === "daily_limit") {
+            thinkEl.remove();
+            addBubble("ai", "⏳ El límite diario de la API se ha alcanzado. SereneAI estará disponible nuevamente en unas horas. Gracias por tu paciencia.");
+            isBusy = false; sendBtn.disabled = false;
+            return;
+          }
+          if (attempt === 1 && (cr.status === 429 || cr.status >= 500)) {
             await new Promise(r => setTimeout(r, 6000));
             continue;
           }
