@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import base64
 import asyncio
@@ -279,9 +280,11 @@ async def synthesize(payload: dict):
     if not text:
         raise HTTPException(status_code=400, detail="text is required")
 
-    # Read only the first sentence for faster TTS
-    first_sentence = text.split(".")[0].split("!")[0].split("¿")[0].strip()
-    tts_text = (first_sentence + ".") if first_sentence else text[:120]
+    # Split on sentence-ending punctuation (., !, ?) — avoids bug with leading ¿
+    parts = re.split(r'(?<=[.!?])\s+', text.strip())
+    tts_text = parts[0].strip() if parts and parts[0].strip() else text[:200]
+    if len(tts_text) > 220:
+        tts_text = tts_text[:220]
 
     async with httpx.AsyncClient(timeout=60) as client:
         resp = await client.post(
