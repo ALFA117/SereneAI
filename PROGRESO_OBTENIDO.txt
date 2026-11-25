@@ -17,9 +17,7 @@ ESTADO GENERAL: BACKEND ✅  FRONTEND ✅  DEPLOY ✅  README ✅  VIDEO ✅
   GitHub             →  https://github.com/ALFA117/SereneAI
   Video demo         →  https://youtu.be/CDG0c7wVv3M?si=5rpsfiSD-2jbDSJf
 
-  Cuentas registradas:
-    Oxlo.ai    →  elopezbaeza705@gmail.com
-    DoraHacks  →  edgarlopezbaeza.ing@gmail.com
+  Redes:
     Instagram  →  @ALFA_EDG_
 
 ────────────────────────────────────────────────────────────────────────────────
@@ -149,7 +147,6 @@ ESTADO GENERAL: BACKEND ✅  FRONTEND ✅  DEPLOY ✅  README ✅  VIDEO ✅
 ────────────────────────────────────────────────────────────────────────────────
 
   [ ] Enviar en DoraHacks antes del 5 abr 23:59
-        Cuenta: edgarlopezbaeza.ing@gmail.com
         Repo:   https://github.com/ALFA117/SereneAI
         Video:  https://youtu.be/CDG0c7wVv3M?si=5rpsfiSD-2jbDSJf
         Demo:   https://serene-ai-seven.vercel.app/
